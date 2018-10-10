@@ -4,7 +4,7 @@ import pygame
 
 class Pacman:
 
-    def __init__(self, screen, pos=(0, 0), speed):
+    def __init__(self, screen, speed, pos=(0, 0)):
         """Initialize pacman"""
         self.screen = screen
         self.screen_rect = screen.get_rect()
@@ -72,6 +72,8 @@ class Pacman:
         if self.moving_down:
             self.image = self.animated_down[self.fps_counter // 30]
             self.rect.y += self.movement_speed
+
+        self.x, self.y = self.rect.x, self.rect.y
 
     def blitme(self):
         """Draw pacman at its location"""

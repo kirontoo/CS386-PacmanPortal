@@ -5,7 +5,7 @@ import pygame
 import sys
 from settings import Settings
 from maze import Maze
-
+from pacman import Pacman
 
 # noinspection PyAttributeOutsideInit
 class PacmanPortal:
@@ -22,16 +22,21 @@ class PacmanPortal:
             (self.settings.screen_width, self.settings.screen_height)
         )
 
-        self.maze = Maze(self.screen, "maze.txt")
+        self.maze = None
+
+        # Initialzie game_objects
+        self.create_game_objects()
 
     def run_game(self):
         """Run the game"""
         while True:
             # Limit FPS
-            self.clock.tick(30)
+            self.clock.tick(60)
 
             # Check Keyboard and mouse events
             self.check_events()
+
+            self.update_objects()
 
             # Update the screen
             self.update_screen()
@@ -49,20 +54,36 @@ class PacmanPortal:
                 self.check_keyup_events(event)
 
     def check_keydown_events(self, event):
-        """Check all keydown events"""
+        """Respond to key presses"""
         if event.key == pygame.K_q:
             sys.exit()
+        elif event.key == pygame.K_RIGHT:
+            self.pacman.moving_right = True
+        elif event.key == pygame.K_LEFT:
+            self.pacman.moving_left = True
+        elif event.key == pygame.K_UP:
+            self.pacman.moving_up = True
+        elif event.key == pygame.K_DOWN:
+            self.pacman.moving_down = True
 
     def check_keyup_events(self, event):
-        """Check all key up events"""
+        """Respond to key releases"""
         if event.key == pygame.K_RIGHT:
-            self.moving_right = False
+            self.pacman.moving_right = False
         elif event.key == pygame.K_LEFT:
-            self.moving_left = False
+            self.pacman.moving_left = False
         elif event.key == pygame.K_UP:
-            self.moving_up = False
+            self.pacman.moving_up = False
         elif event.key == pygame.K_DOWN:
-            self.moving_down = False
+            self.pacman.moving_down = False
+
+    def create_game_objects(self):
+        """Initialize all game objects"""
+        self.maze = Maze(self.screen, "maze.txt")
+        self.pacman = Pacman(self.screen, 3)
+
+    def update_objects(self):
+        self.pacman.update()
 
     def update_screen(self):
         """Update the screen"""
@@ -71,6 +92,7 @@ class PacmanPortal:
         )
 
         self.maze.show_maze()
+        self.pacman.blitme()
 
         # Make the most recently drawn screen visible
         pygame.display.flip()
