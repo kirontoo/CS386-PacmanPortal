@@ -1,3 +1,6 @@
+# CS-386 Pacman Portal
+# Amy Nguyen-Dang
+
 import os
 import pygame
 
@@ -11,8 +14,7 @@ class Pacman:
         self.x, self.y = pos
         self.movement_speed = speed
 
-        # TODO: directory subject to change
-        self.dir = "images/pacman"
+        self.dir = "assets/sprites/pacman"
 
         # Load pacman animation
         self.animated_left = []

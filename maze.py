@@ -24,17 +24,17 @@ class Maze:
     def load_maze_file(self):
         """Read a maze file."""
 
-        self.dir = "mazes"
+        self.dir = "assets/mazes"
         file = os.path.join(self.dir, self.maze_file)
 
         with open(file, 'r') as f:
             self.maze = f.read()
 
     def build(self):
+        """Build maze"""
         pos_x = 0
         pos_y = 0
         new_brick = Brick(self.screen, (pos_x, pos_y))
-
 
         for c in self.maze:
             if c == '\n':
@@ -52,6 +52,7 @@ class Maze:
             pos_x += new_brick.rect.width
 
     def set_screen_size(self):
+        """Set dynamic screen size"""
         width = self.get_screen_width()
         height = self.get_screen_height()
 
@@ -60,6 +61,7 @@ class Maze:
         )
 
     def get_screen_width(self):
+        """Find dynamic screen width"""
         row_of_bricks = 0
 
         for c in self.maze:
@@ -72,6 +74,7 @@ class Maze:
         return width
 
     def get_screen_height(self):
+        """Find dynamic screen height"""
         column_of_bricks = 0
         for c in self.maze:
             if c == '\n':

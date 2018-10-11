@@ -1,3 +1,6 @@
+# CS-386 Pacman Portal
+# Amy Nguyen-Dang
+
 import pygame
 import os
 
@@ -12,7 +15,7 @@ class Ghost:
         self.screen_rect = screen.get_rect()
         self.x, self.y = pos
         self.movement_speed = 0
-        self.dir = "images/ghost_" + self.type
+        self.dir = "assets/sprites/ghost_" + self.type
 
         # Load ghost animations
         self.animated_sprites = []
@@ -46,13 +49,11 @@ class Ghost:
             self.animated_sprites.append(pygame.image.load(os.path.join(self.dir, sprite)))
 
             eyes_sprite = "ghost_eyes_" + str(i)
-            # TODO: directory subject to change
-            eyes_dir = "images/ghost_eyes"
+            eyes_dir = "assets/sprites/ghost_eyes"
             self.animated_eyes.append(pygame.image.load(os.path.join(eyes_dir, eyes_sprite)))
 
         # Load scared ghost sprite
-        # TODO: directory subject to change
-        scared_ghost_dir = "images/ghost_scared"
+        scared_ghost_dir = "assets/sprites/ghost_scared"
         self.scared_sprite = pygame.image.load(os.path.join(scared_ghost_dir, "ghost_scared"))
 
         # Initialize position on the screen
