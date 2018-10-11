@@ -8,7 +8,10 @@ from maze import Maze
 from pacman import Pacman
 
 # noinspection PyAttributeOutsideInit
+
+
 class PacmanPortal:
+
     def __init__(self):
         """Initiate pong game settings and objects"""
         pygame.init()
@@ -98,5 +101,6 @@ class PacmanPortal:
         pygame.display.flip()
 
 
-game = PacmanPortal()
-game.run_game()
+if __name__ == "__main__":
+    game = PacmanPortal()
+    game.run_game()

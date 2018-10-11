@@ -14,7 +14,7 @@ class Brick:
         self.screen_rect = screen.get_rect()
 
         # Load the brick image and get its rect
-        self.image = pygame.image.load(os.path.join("images", "brick2.png")).convert()
+        self.image = pygame.image.load(os.path.join("assets/sprites", "brick2.png")).convert()
         self.rect = self.image.get_rect()
 
         self.rect.x, self.rect.y = pos
