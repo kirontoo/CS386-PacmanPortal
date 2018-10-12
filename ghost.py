@@ -47,16 +47,16 @@ class Ghost:
 
         # Load ghost by type and eyes sprites
         for i in range(4):
-            sprite = "ghost_" + self.type + str(i)
+            sprite = "ghost_" + self.type + "_" + str(i) + ".png"
             self.animated_sprites.append(pygame.image.load(os.path.join(self.dir, sprite)))
 
-            eyes_sprite = "ghost_eyes_" + str(i)
+            eyes_sprite = "ghost_eyes_" + str(i) + ".png"
             eyes_dir = "assets/sprites/ghost_eyes"
             self.animated_eyes.append(pygame.image.load(os.path.join(eyes_dir, eyes_sprite)))
 
         # Load scared ghost sprite
         scared_ghost_dir = "assets/sprites/ghost_scared"
-        self.scared_sprite = pygame.image.load(os.path.join(scared_ghost_dir, "ghost_scared"))
+        self.scared_sprite = pygame.image.load(os.path.join(scared_ghost_dir, "ghost_scared.png"))
 
         # Initialize position on the screen
         self.image = self.animated_sprites[2]
