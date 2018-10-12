@@ -6,6 +6,7 @@ import sys
 from settings import Settings
 from maze import Maze
 from pacman import Pacman
+from ghost import Ghost
 
 # noinspection PyAttributeOutsideInit
 
@@ -66,6 +67,7 @@ class PacmanPortal:
         elif event.key == pygame.K_RIGHT:
             self.pacman.moving_right = True
 
+            # Set all other pacman flags to false
             self.pacman.moving_up = False
             self.pacman.moving_down = False
             self.pacman.moving_left = False
@@ -73,6 +75,7 @@ class PacmanPortal:
         elif event.key == pygame.K_LEFT:
             self.pacman.moving_left = True
 
+            # Set all other pacman flags to false
             self.pacman.moving_up = False
             self.pacman.moving_down = False
             self.pacman.moving_right = False
@@ -80,6 +83,7 @@ class PacmanPortal:
         elif event.key == pygame.K_UP:
             self.pacman.moving_up = True
 
+            # Set all other pacman flags to false
             self.pacman.moving_left = False
             self.pacman.moving_down = False
             self.pacman.moving_right = False
@@ -87,6 +91,7 @@ class PacmanPortal:
         elif event.key == pygame.K_DOWN:
             self.pacman.moving_down = True
 
+            # Set all other pacman flags to false
             self.pacman.moving_up = False
             self.pacman.moving_left = False
             self.pacman.moving_right = False
@@ -105,11 +110,25 @@ class PacmanPortal:
     def create_game_objects(self):
         print("create game objects")
         """Initialize all game objects"""
+
+        # Create a maze
         self.maze = Maze(self.screen, "maze.txt")
+
+        # Create  pacman
         self.pacman = Pacman(self.screen, 3)
+
+        # Create ghosts
+        self.blinky = Ghost(self.screen, "blinky", (500,500))
+        self.clyde = Ghost(self.screen, "clyde", (600,500))
+        self.inky = Ghost(self.screen, "inky", (700,500))
+        self.pinky = Ghost(self.screen, "pinky", (800,500))
 
     def update_objects(self):
         self.pacman.update()
+        self.blinky.update()
+        self.inky.update()
+        self.pinky.update()
+        self.clyde.update()
 
     def update_screen(self):
         """Update the screen"""
@@ -119,6 +138,10 @@ class PacmanPortal:
 
         self.maze.show_maze()
         self.pacman.blitme()
+        self.blinky.blitme()
+        self.inky.blitme()
+        self.pinky.blitme()
+        self.clyde.blitme()
 
         # Make the most recently drawn screen visible
         pygame.display.flip()
