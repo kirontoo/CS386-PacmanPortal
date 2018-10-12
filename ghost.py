@@ -8,6 +8,8 @@ ghost_types = ["inky", "pinky", "blinky", "clyde"]
 
 
 class Ghost:
+    """Create a ghost object"""
+
     def __init__(self, screen, type="inky", pos=(0, 0)):
         """Initialize Ghost"""
         self.type = type

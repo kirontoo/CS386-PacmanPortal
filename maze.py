@@ -8,6 +8,7 @@ import pygame
 
 
 class Maze:
+    """Build a maze level"""
 
     def __init__(self, screen, file):
         self.maze_file = file

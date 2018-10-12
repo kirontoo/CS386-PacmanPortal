@@ -1,4 +1,4 @@
-# CS386 - Alien Invaders 2
+# CS386 - Pacman Portal
 # Amy Nguyen-Dang
 
 import pygame.font
@@ -73,6 +73,8 @@ class Scoreboard():
         self.level_rect.right = self.score_rect.right
         self.level_rect.top = self.score_rect.bottom + 10
 
+
+    # TODO: change this to pacmans
     def prep_ships(self):
         """Show how many ships are left."""
         self.ships = Group()

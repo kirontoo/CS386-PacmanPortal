@@ -6,6 +6,7 @@ import pygame
 
 
 class Pacman:
+    """Create a pacman object"""
 
     def __init__(self, screen, speed, pos=(0, 0)):
         """Initialize pacman"""
@@ -45,11 +46,11 @@ class Pacman:
 
             if i in range(2):
                 self.animated_right.append(pygame.image.load(os.path.join(self.dir, image)))
-            if i in range(2,4):
+            if i in range(2, 4):
                 self.animated_up.append(pygame.image.load(os.path.join(self.dir, image)))
-            if i in range(4,6):
+            if i in range(4, 6):
                 self.animated_left.append(pygame.image.load(os.path.join(self.dir, image)))
-            if i in range(6,8):
+            if i in range(6, 8):
                 self.animated_down.append(pygame.image.load(os.path.join(self.dir, image)))
 
         # Initialize position on the screen

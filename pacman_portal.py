@@ -41,6 +41,7 @@ class PacmanPortal:
             # Check Keyboard and mouse events
             self.check_events()
 
+            # Update all objects
             self.update_objects()
 
             # Update the screen
