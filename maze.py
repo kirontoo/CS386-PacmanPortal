@@ -17,7 +17,6 @@ class Maze:
         self.maze = None
         self.dir = file
 
-        self.load_maze_file()
         self.build()
         self.set_screen_size()
 
@@ -34,8 +33,11 @@ class Maze:
 
     def build(self):
         """Build maze"""
+        self.load_maze_file()
+
         pos_x = 0
         pos_y = 0
+
         new_brick = Brick(self.screen, (pos_x, pos_y))
 
         for c in self.maze:
