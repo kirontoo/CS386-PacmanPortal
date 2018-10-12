@@ -20,3 +20,5 @@ class Settings:
         self.scoreboard_border_color = (255, 89, 0)
         self.scoreboard_font_size = 70
 
+        # Pacman settings
+        self.pacman_lives = 3

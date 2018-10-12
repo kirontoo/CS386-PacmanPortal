@@ -7,6 +7,8 @@ from settings import Settings
 from maze import Maze
 from pacman import Pacman
 from ghost import Ghost
+from game_stats import GameStats
+from start_screen import StartScreen
 
 # noinspection PyAttributeOutsideInit
 
@@ -20,6 +22,7 @@ class PacmanPortal:
         pygame.display.set_caption("Pacman Portal")
 
         self.settings = Settings()
+        self.stats = GameStats(self.settings.pacman_lives)
         self.clock = pygame.time.Clock()
 
         # Create a screen
@@ -29,7 +32,10 @@ class PacmanPortal:
 
         self.maze = None
 
-        # Initialzie game_objects
+        self.start_screen = StartScreen(self.screen, self.settings.screen_bg_color,
+                                        "Pacman", "Portal")
+
+        # Initialize game_objects
         self.create_game_objects()
 
     def run_game(self):
@@ -42,8 +48,9 @@ class PacmanPortal:
             # Check Keyboard and mouse events
             self.check_events()
 
-            # Update all objects
-            self.update_objects()
+            if self.stats.game_active:
+                # Update all objects
+                self.update_objects()
 
             # Update the screen
             self.update_screen()
@@ -67,7 +74,7 @@ class PacmanPortal:
         elif event.key == pygame.K_RIGHT:
             self.pacman.moving_right = True
 
-            # Set all other pacman flags to false
+            # Set all other pacman movement flags to false
             self.pacman.moving_up = False
             self.pacman.moving_down = False
             self.pacman.moving_left = False
@@ -75,7 +82,7 @@ class PacmanPortal:
         elif event.key == pygame.K_LEFT:
             self.pacman.moving_left = True
 
-            # Set all other pacman flags to false
+            # Set all other pacman movement flags to false
             self.pacman.moving_up = False
             self.pacman.moving_down = False
             self.pacman.moving_right = False
@@ -83,7 +90,7 @@ class PacmanPortal:
         elif event.key == pygame.K_UP:
             self.pacman.moving_up = True
 
-            # Set all other pacman flags to false
+            # Set all other pacman movement flags to false
             self.pacman.moving_left = False
             self.pacman.moving_down = False
             self.pacman.moving_right = False
@@ -91,7 +98,7 @@ class PacmanPortal:
         elif event.key == pygame.K_DOWN:
             self.pacman.moving_down = True
 
-            # Set all other pacman flags to false
+            # Set all other pacman movement flags to false
             self.pacman.moving_up = False
             self.pacman.moving_left = False
             self.pacman.moving_right = False
@@ -124,6 +131,7 @@ class PacmanPortal:
         self.pinky = Ghost(self.screen, "pinky", (800,500))
 
     def update_objects(self):
+        """Update all game objects"""
         self.pacman.update()
         self.blinky.update()
         self.inky.update()
@@ -136,12 +144,15 @@ class PacmanPortal:
             self.settings.screen_bg_color
         )
 
-        self.maze.show_maze()
-        self.pacman.blitme()
-        self.blinky.blitme()
-        self.inky.blitme()
-        self.pinky.blitme()
-        self.clyde.blitme()
+        if self.stats.game_active:
+            self.maze.show_maze()
+            self.pacman.blitme()
+            self.blinky.blitme()
+            self.inky.blitme()
+            self.pinky.blitme()
+            self.clyde.blitme()
+        else:
+            self.start_screen.draw()
 
         # Make the most recently drawn screen visible
         pygame.display.flip()

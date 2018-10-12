@@ -33,7 +33,7 @@ class StartScreen:
         # Create and position the title
         self.title_image = font.render(self.title, True, text_color, self.bg_color)
         self.title_rect = self.title_image.get_rect()
-        self.title_rect.x = (self.screen_rect.width // 2) - (self.title_rect.widht // 2)
+        self.title_rect.x = (self.screen_rect.width // 2) - (self.title_rect.width // 2)
 
     def prep_subtitle(self):
         """Prepare the subtitle image"""
@@ -41,12 +41,12 @@ class StartScreen:
         text_color = (255, 255, 255)
 
         # Create and position the subtitle
-        self.subtitle_image = font.render(self.subtitle, text_color)
+        self.subtitle_image = font.render(self.subtitle, True, text_color, self.bg_color)
         self.subtitle_rect = self.subtitle_image.get_rect()
-        self.subtitle_rect.x = (self.screen_rect.widht // 2) - (self.subtitle_rect.width // 2)
+        self.subtitle_rect.x = (self.screen_rect.width // 2) - (self.subtitle_rect.width // 2)
 
         # Align it under the title
-        self.subtitle_rect.top = self.title_rect.bottom + 30
+        self.subtitle_rect.top = self.title_rect.bottom
 
     def draw(self):
         self.screen.blit(self.title_image, self.title_rect)
