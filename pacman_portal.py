@@ -13,9 +13,10 @@ from pacman import Pacman
 class PacmanPortal:
 
     def __init__(self):
-        """Initiate pong game settings and objects"""
+        print("pacman portal init")
+        """Initiate Pacman Portal game settings and objects"""
         pygame.init()
-        pygame.display.set_caption("Pong")
+        pygame.display.set_caption("Pacman Portal")
 
         self.settings = Settings()
         self.clock = pygame.time.Clock()
@@ -31,6 +32,7 @@ class PacmanPortal:
         self.create_game_objects()
 
     def run_game(self):
+        print("run game")
         """Run the game"""
         while True:
             # Limit FPS
@@ -81,6 +83,7 @@ class PacmanPortal:
             self.pacman.moving_down = False
 
     def create_game_objects(self):
+        print("create game objects")
         """Initialize all game objects"""
         self.maze = Maze(self.screen, "maze.txt")
         self.pacman = Pacman(self.screen, 3)

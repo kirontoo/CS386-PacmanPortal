@@ -3,12 +3,15 @@
 
 import pygame
 import os
+from pygame.sprite import Sprite
 
 
-class Brick:
+class Brick(Sprite):
 
     def __init__(self, screen, pos=(0,0)):
         """Initialize the brick and set its starting position"""
+
+        super(Brick, self).__init__()
 
         self.screen = screen
         self.screen_rect = screen.get_rect()

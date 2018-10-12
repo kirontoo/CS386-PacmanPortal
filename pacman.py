@@ -38,6 +38,7 @@ class Pacman:
     # TODO: set __str__
 
     def load(self):
+        print("Load pacman")
         """Load pacman animation images"""
         for i in range(8):
             image = "pacman_" + str(i) + ".png"
