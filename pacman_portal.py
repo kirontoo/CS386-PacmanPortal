@@ -56,8 +56,8 @@ class PacmanPortal:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
             elif event.type == pygame.KEYDOWN:
                 self.check_keydown_events(event)
-            elif event.type == pygame.KEYUP:
-                self.check_keyup_events(event)
+            # elif event.type == pygame.KEYUP:
+            #     self.check_keyup_events(event)
 
     def check_keydown_events(self, event):
         """Respond to key presses"""
@@ -65,12 +65,31 @@ class PacmanPortal:
             sys.exit()
         elif event.key == pygame.K_RIGHT:
             self.pacman.moving_right = True
+
+            self.pacman.moving_up = False
+            self.pacman.moving_down = False
+            self.pacman.moving_left = False
+
         elif event.key == pygame.K_LEFT:
             self.pacman.moving_left = True
+
+            self.pacman.moving_up = False
+            self.pacman.moving_down = False
+            self.pacman.moving_right = False
+
         elif event.key == pygame.K_UP:
             self.pacman.moving_up = True
+
+            self.pacman.moving_left = False
+            self.pacman.moving_down = False
+            self.pacman.moving_right = False
+
         elif event.key == pygame.K_DOWN:
             self.pacman.moving_down = True
+
+            self.pacman.moving_up = False
+            self.pacman.moving_left = False
+            self.pacman.moving_right = False
 
     def check_keyup_events(self, event):
         """Respond to key releases"""

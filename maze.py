@@ -19,7 +19,7 @@ class Maze:
         self.dir = file
 
         self.build()
-        # self.set_screen_size()
+        self.set_screen_size()
 
     # TODO: set __str__
 
@@ -77,7 +77,6 @@ class Maze:
                 break
 
             row_of_bricks += 1
-
         width = row_of_bricks * self.bricks[0].rect.width
         return width
 
