@@ -78,12 +78,11 @@ class Ghost:
         """Update the ghost's position based on movement flag and state."""
 
         # Update movement animation and position
-        if self.scared:
-            self.image = self.scared_sprite
-
         if self.moving_right:
             if self.dead:
                 self.image = self.animated_eyes[3]
+            elif self.scared:
+                self.image = self.scared_sprite
             else:
                 self.image = self.animated_sprites[3]
             self.x += self.movement_speed
@@ -91,6 +90,8 @@ class Ghost:
         if self.moving_left:
             if self.dead:
                 self.image = self.animated_eyes[1]
+            elif self.scared:
+                self.image = self.scared_sprite
             else:
                 self.image = self.animated_sprites[1]
             self.x -= self.movement_speed
@@ -98,6 +99,8 @@ class Ghost:
         if self.moving_up:
             if self.dead:
                 self.image = self.animated_eyes[2]
+            elif self.scared:
+                self.image = self.scared_sprite
             else:
                 self.image = self.animated_sprites[2]
             self.y -= self.movement_speed
@@ -105,6 +108,8 @@ class Ghost:
         if self.moving_down:
             if self.dead:
                 self.image = self.animated_eyes[0]
+            elif self.scared:
+                self.image = self.scared_sprite
             else:
                 self.image = self.animated_sprites[0]
             self.y += self.movement_speed

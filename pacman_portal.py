@@ -127,10 +127,10 @@ class PacmanPortal:
         self.pacman = Pacman(self.screen, self.settings.pacman_speed)
 
         # Create ghosts
-        self.blinky = Ghost(self.screen, "blinky", (500,500))
-        self.clyde = Ghost(self.screen, "clyde", (600,500))
-        self.inky = Ghost(self.screen, "inky", (700,500))
-        self.pinky = Ghost(self.screen, "pinky", (800,500))
+        self.blinky = Ghost(self.screen, "blinky", (500, 500))
+        self.clyde = Ghost(self.screen, "clyde", (600, 500))
+        self.inky = Ghost(self.screen, "inky", (700, 500))
+        self.pinky = Ghost(self.screen, "pinky", (800, 500))
 
     def on_button_clicked(self, btn, pos):
         """Check if the button has been pressed."""
