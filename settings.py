@@ -22,4 +22,4 @@ class Settings:
 
         # Pacman settings
         self.pacman_lives = 3
-        self.pacman_speed = 2
+        self.pacman_speed = 1

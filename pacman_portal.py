@@ -51,9 +51,25 @@ class PacmanPortal:
             if self.stats.game_active:
                 # Update all objects
                 self.update_objects()
+                # Check all collisions
+                self.check_collisions()
 
             # Update the screen
             self.update_screen()
+
+    def check_collisions(self):
+        """Check collisions for all game objects"""
+
+        # Check for pacman munching on pellets collisions
+        pellet_collisions = pygame.sprite.spritecollide(self.pacman, self.maze.pellets, True)
+
+        if pellet_collisions:
+            for pellet in pellet_collisions:
+
+                # Play munching sound
+                self.mixer.play_sound(self.mixer.pacman_chomp, 0)
+                if pellet.type == "pwr":
+                    print("ghosts scared")
 
     def check_events(self):
         """Check for any keyboard events"""

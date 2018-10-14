@@ -3,13 +3,16 @@
 
 import pygame
 import os
+from pygame.sprite import Sprite
 
 
-class Pellet:
+class Pellet(Sprite):
     """Create pellets and power pellets"""
 
     def __init__(self, screen, pos=(0, 0), type="pellet"):
         """Initialize a pellet by type"""
+        super(Pellet, self).__init__()
+
         self.screen = screen
         self.screen_rect = screen.get_rect()
         self.type = type

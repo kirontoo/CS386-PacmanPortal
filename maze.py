@@ -3,6 +3,7 @@
 
 import pygame
 import os
+from pygame.sprite import Group
 from brick import Brick
 from cherry import Cherry
 from pellet import Pellet
@@ -20,9 +21,9 @@ class Maze:
         self.dir = file
 
         # Grid objects
-        self.bricks = []
-        self.pwr_ups = []
-        self.pellets = []
+        self.bricks = Group()
+        self.pwr_ups = Group()
+        self.pellets = Group()
 
         self.build()
         self.set_screen_size()
@@ -63,20 +64,20 @@ class Maze:
             if c == 'x':
                 # Create a brick
                 new_brick = Brick(self.screen, (pos_x, pos_y))
-                self.bricks.append(new_brick)
+                self.bricks.add(new_brick)
 
             # Build cherry power ups
             if c == 'c':
                 pwr_up_cherry = Cherry(self.screen, (pos_x, pos_y))
-                self.pwr_ups.append(pwr_up_cherry)
+                self.pwr_ups.add(pwr_up_cherry)
 
             if c == '.':
                 pellet = Pellet(self.screen, (pos_x, pos_y))
-                self.pellets.append(pellet)
+                self.pellets.add(pellet)
 
             if c == "o":
                 pwr_pellet = Pellet(self.screen, (pos_x, pos_y), "pwr")
-                self.pellets.append(pwr_pellet)
+                self.pellets.add(pwr_pellet)
 
             pos_x += new_brick.rect.width
 
@@ -92,23 +93,26 @@ class Maze:
     def get_screen_width(self):
         """Find dynamic screen width"""
         row_of_bricks = 0
+        brick = Brick(self.screen)
 
         for c in self.grid:
             if c == '\n':
                 break
 
             row_of_bricks += 1
-        width = row_of_bricks * self.bricks[0].rect.width
+        width = row_of_bricks * brick.rect.width
         return width
 
     def get_screen_height(self):
         """Find dynamic screen height"""
         column_of_bricks = 0
+        brick = Brick(self.screen)
+
         for c in self.grid:
             if c == '\n':
                 column_of_bricks += 1
 
-        height = column_of_bricks * self.bricks[0].rect.height
+        height = column_of_bricks * brick.rect.height
         return height
 
     def show_maze(self):

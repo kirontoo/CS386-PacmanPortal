@@ -3,13 +3,16 @@
 
 import pygame
 import os
+from pygame.sprite import Sprite
 
-
-class Cherry:
+class Cherry(Sprite):
     """Create a power up cherry object."""
 
     def __init__(self, screen, pos=(0,0)):
         """Initialize Cherry Power up"""
+
+        super(Cherry, self).__init__()
+
         self.screen = screen
         self.screen_rect = screen.get_rect()
         self.x, self.y = pos
