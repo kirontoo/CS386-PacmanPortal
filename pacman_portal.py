@@ -34,7 +34,6 @@ class PacmanPortal:
 
         self.start_screen = StartScreen(self.screen, self.settings.screen_bg_color,
                                         "Pacman", "Portal")
-
         # Initialize game_objects
         self.create_game_objects()
 
@@ -62,6 +61,8 @@ class PacmanPortal:
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
+                # Check for button clicks
+                self.on_button_clicked(self.start_screen.play_button, (mouse_x, mouse_y))
             elif event.type == pygame.KEYDOWN:
                 self.check_keydown_events(event)
             # elif event.type == pygame.KEYUP:
@@ -121,14 +122,29 @@ class PacmanPortal:
         # Create a maze
         self.maze = Maze(self.screen, "maze.txt")
 
-        # Create  pacman
-        self.pacman = Pacman(self.screen, 3)
+        # Create pacman
+        self.pacman = Pacman(self.screen, self.settings.pacman_speed)
 
         # Create ghosts
         self.blinky = Ghost(self.screen, "blinky", (500,500))
         self.clyde = Ghost(self.screen, "clyde", (600,500))
         self.inky = Ghost(self.screen, "inky", (700,500))
         self.pinky = Ghost(self.screen, "pinky", (800,500))
+
+    def on_button_clicked(self, btn, pos):
+        """Check if the button has been pressed."""
+        m_x, m_y = pos
+        btn_clicked = btn.rect.collidepoint(m_x, m_y)
+
+        if btn_clicked and not self.stats.game_active:
+            # Reset all settings
+            # Hide the mouse cursor.
+            pygame.mouse.set_visible(False)
+
+            # Reset the game statistics.
+            self.stats.reset()
+            self.stats.game_active = True
+
 
     def update_objects(self):
         """Update all game objects"""
@@ -144,6 +160,7 @@ class PacmanPortal:
             self.settings.screen_bg_color
         )
 
+        # While the game is active, show all game objects
         if self.stats.game_active:
             self.maze.show_maze()
             self.pacman.blitme()
@@ -152,6 +169,7 @@ class PacmanPortal:
             self.pinky.blitme()
             self.clyde.blitme()
         else:
+            # Show the start screen when game is inactive
             self.start_screen.draw()
 
         # Make the most recently drawn screen visible

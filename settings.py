@@ -11,7 +11,7 @@ class Settings:
         self.screen_width = 1200
         self.screen_height = 800
         self.screen_midX = self.screen_width // 2
-        self.screen_bg_color = (42, 78, 110)
+        self.screen_bg_color = (0, 0, 0)
         self.screen_padding = 30
         self.FPS = 30
 
@@ -22,3 +22,4 @@ class Settings:
 
         # Pacman settings
         self.pacman_lives = 3
+        self.pacman_speed = 2

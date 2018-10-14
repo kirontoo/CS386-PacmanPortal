@@ -4,6 +4,7 @@
 import pygame
 from button import Button
 
+
 class StartScreen:
 
     def __init__(self, screen, bg_color, title, subtitle=None, font_size=100):
@@ -25,15 +26,19 @@ class StartScreen:
             self.subtitle = subtitle
             self.prep_subtitle()
 
+        # Create the play button
+        self.play_button = Button(self.screen, "Play", (255, 255, 255), (13, 255, 0))
+
     def prep_title(self):
         """Prepare the title image"""
         font = pygame.font.SysFont(None, self.font_size)
-        text_color = (255, 0, 255)
+        text_color = (255, 241, 87)
 
         # Create and position the title
         self.title_image = font.render(self.title, True, text_color, self.bg_color)
         self.title_rect = self.title_image.get_rect()
         self.title_rect.x = (self.screen_rect.width // 2) - (self.title_rect.width // 2)
+        self.title_rect.y = self.title_rect.height // 2
 
     def prep_subtitle(self):
         """Prepare the subtitle image"""
@@ -49,5 +54,8 @@ class StartScreen:
         self.subtitle_rect.top = self.title_rect.bottom
 
     def draw(self):
+        """Draw the title, subtitle and play button"""
         self.screen.blit(self.title_image, self.title_rect)
         self.screen.blit(self.subtitle_image, self.subtitle_rect)
+
+        self.play_button.draw()
