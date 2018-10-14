@@ -5,6 +5,7 @@ import os
 from brick import Brick
 
 import pygame
+from cherry import Cherry
 
 
 class Maze:
@@ -15,6 +16,7 @@ class Maze:
         self.screen = screen
         self.screen_rect = screen.get_rect()
         self.bricks = []
+        self.pwr_ups = []
         self.grid = None
         self.dir = file
 
@@ -53,9 +55,14 @@ class Maze:
                 pos_x += new_brick.rect.width
                 continue
 
-            # Create a brick
-            new_brick = Brick(self.screen, (pos_x, pos_y))
-            self.bricks.append(new_brick)
+            if c == 'x':
+                # Create a brick
+                new_brick = Brick(self.screen, (pos_x, pos_y))
+                self.bricks.append(new_brick)
+
+            if c == 'c':
+                pwr_up_cherry = Cherry(self.screen, (pos_x, pos_y))
+                self.pwr_ups.append(pwr_up_cherry)
 
             pos_x += new_brick.rect.width
 
@@ -95,3 +102,5 @@ class Maze:
         for brick in self.bricks:
             brick.blitme()
 
+        for pwr_up in self.pwr_ups:
+            pwr_up.blitme()
