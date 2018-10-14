@@ -1,11 +1,11 @@
 # CS-386 Pacman Portal
 # Amy Nguyen-Dang
 
+import pygame
 import os
 from brick import Brick
-
-import pygame
 from cherry import Cherry
+from pellet import Pellet
 
 
 class Maze:
@@ -15,10 +15,14 @@ class Maze:
         self.maze_file = file
         self.screen = screen
         self.screen_rect = screen.get_rect()
-        self.bricks = []
-        self.pwr_ups = []
+
         self.grid = None
         self.dir = file
+
+        # Grid objects
+        self.bricks = []
+        self.pwr_ups = []
+        self.pellets = []
 
         self.build()
         self.set_screen_size()
@@ -55,14 +59,24 @@ class Maze:
                 pos_x += new_brick.rect.width
                 continue
 
+            # Build walls
             if c == 'x':
                 # Create a brick
                 new_brick = Brick(self.screen, (pos_x, pos_y))
                 self.bricks.append(new_brick)
 
+            # Build cherry power ups
             if c == 'c':
                 pwr_up_cherry = Cherry(self.screen, (pos_x, pos_y))
                 self.pwr_ups.append(pwr_up_cherry)
+
+            if c == '.':
+                pellet = Pellet(self.screen, (pos_x, pos_y))
+                self.pellets.append(pellet)
+
+            if c == "o":
+                pwr_pellet = Pellet(self.screen, (pos_x, pos_y), "pwr")
+                self.pellets.append(pwr_pellet)
 
             pos_x += new_brick.rect.width
 
@@ -104,3 +118,8 @@ class Maze:
 
         for pwr_up in self.pwr_ups:
             pwr_up.blitme()
+
+        for pellet in self.pellets:
+            if pellet.type == "pwr":
+                pellet.update()
+            pellet.blitme()
