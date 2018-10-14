@@ -9,6 +9,7 @@ from pacman import Pacman
 from ghost import Ghost
 from game_stats import GameStats
 from start_screen import StartScreen
+from sounds import Sounds
 
 # noinspection PyAttributeOutsideInit
 
@@ -31,7 +32,7 @@ class PacmanPortal:
         )
 
         self.maze = None
-
+        self.mixer = Sounds()
         self.start_screen = StartScreen(self.screen, self.settings.screen_bg_color,
                                         "Pacman", "Portal")
         # Initialize game_objects
@@ -144,7 +145,6 @@ class PacmanPortal:
             # Reset the game statistics.
             self.stats.reset()
             self.stats.game_active = True
-
 
     def update_objects(self):
         """Update all game objects"""
