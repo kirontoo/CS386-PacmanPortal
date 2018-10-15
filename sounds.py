@@ -19,6 +19,7 @@ class Sounds:
     def load_sounds(self):
         """Load all sound files"""
         self.pacman_chomp = pygame.mixer.Sound(os.path.join(self.dir, "pacman_chomp.wav"))
+        self.fruit_eaten = pygame.mixer.Sound(os.path.join(self.dir, "fruit_eaten.wav"))
 
     def play_sound(self, sound, loop):
         """Play a sound effect"""
