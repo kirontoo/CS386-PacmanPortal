@@ -51,6 +51,7 @@ class Maze:
         pos_y = 0
 
         new_brick = Brick(self.screen, (pos_x, pos_y))
+        self.brick_size = new_brick.rect.width
 
         for c in self.grid:
             if c == '\n':
@@ -95,7 +96,7 @@ class Maze:
         height = self.get_screen_height()
 
         # Add to height for scoreboard
-        height += 200
+        height += (80 + self.brick_size)
 
         self.screen = pygame.display.set_mode(
             (width, height)
@@ -104,14 +105,13 @@ class Maze:
     def get_screen_width(self):
         """Find dynamic screen width"""
         row_of_bricks = 0
-        brick = Brick(self.screen)
 
         for c in self.grid:
             if c == '\n':
                 break
 
             row_of_bricks += 1
-        width = row_of_bricks * brick.rect.width
+        width = row_of_bricks * self.brick_size
         return width
 
     def get_screen_height(self):
@@ -123,7 +123,7 @@ class Maze:
             if c == '\n':
                 column_of_bricks += 1
 
-        height = column_of_bricks * brick.rect.height
+        height = column_of_bricks * self.brick_size
         return height
 
     def show_maze(self):
