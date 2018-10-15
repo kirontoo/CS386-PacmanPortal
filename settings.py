@@ -8,9 +8,6 @@ class Settings:
     def __init__(self):
 
         # Screen settings
-        self.screen_width = 1200
-        self.screen_height = 800
-        self.screen_midX = self.screen_width // 2
         self.screen_bg_color = (0, 0, 0)
         self.screen_padding = 30
         self.FPS = 30
@@ -23,3 +20,21 @@ class Settings:
         # Pacman settings
         self.pacman_lives = 3
         self.pacman_speed = 1
+
+        # Pellet settings
+        self.pellet_points = 10
+        self.pwr_pellet_points = 50
+
+        # Ghost settings
+        self.ghost_points = 100
+
+        # Fruit settings
+
+        self.initialize_dynamic_settings()
+
+    def initialize_dynamic_settings(self):
+        """Initialize settings that change throughout the game."""
+        self.ghost_current_pt_value = 0
+
+        self.screen_width = 1200
+        self.screen_height = 800

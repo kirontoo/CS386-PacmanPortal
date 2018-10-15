@@ -9,6 +9,7 @@ from pacman import Pacman
 from ghost import Ghost
 from game_stats import GameStats
 from start_screen import StartScreen
+from scoreboard import Scoreboard
 from sounds import Sounds
 
 # noinspection PyAttributeOutsideInit
@@ -35,8 +36,13 @@ class PacmanPortal:
         self.mixer = Sounds()
         self.start_screen = StartScreen(self.screen, self.settings.screen_bg_color,
                                         "Pacman", "Portal")
+        self.scoreboard = Scoreboard(self.screen, self.stats)
         # Initialize game_objects
         self.create_game_objects()
+
+        # Update screen width and height
+        self.settings.screen_width = self.maze.screen_rect.width
+        self.settings.screen_height = self.maze.screen_rect.height
 
     def run_game(self):
         print("run game")
@@ -64,12 +70,50 @@ class PacmanPortal:
         pellet_collisions = pygame.sprite.spritecollide(self.pacman, self.maze.pellets, True)
 
         if pellet_collisions:
-            for pellet in pellet_collisions:
+            # Play munching sound
+            self.mixer.play_sound(self.mixer.pacman_chomp, 0)
 
-                # Play munching sound
-                self.mixer.play_sound(self.mixer.pacman_chomp, 0)
+            for pellet in pellet_collisions:
                 if pellet.type == "pwr":
                     print("ghosts scared")
+                    self.stats.current_score += self.settings.pwr_pellet_points
+                else:
+                    self.stats.current_score += self.settings.pellet_points
+
+                self.scoreboard.prep_score()
+
+        # Check for pacman munching on power up cherry collisions
+        cherry_collisions = pygame.sprite.spritecollide(self.pacman, self.maze.fruits, True)
+        if cherry_collisions:
+            self.mixer.play_sound(self.mixer.fruit_eaten, 0)
+            print("cherry power up!")
+
+        # Check collisions with walls.
+        wall_collisions = pygame.sprite.spritecollide(self.pacman, self.maze.bricks, False)
+
+        # save current pacman location
+        pos = (self.pacman.rect.x, self.pacman.rect.y)
+
+        if wall_collisions:
+            for wall in wall_collisions:
+                if wall.rect.right <= self.pacman.rect.x:
+                    self.pacman.moving_left = False
+                    # self.pacman.rect.x += 2
+
+                if wall.rect.x > self.pacman.rect.centerx:
+                    self.pacman.moving_right = False
+                    # self.pacman.rect.x -= 2
+
+                if wall.rect.bottom > self.pacman.rect.centery:
+                    self.pacman.moving_up = False
+                    # self.pacman.rect.y += 2
+
+                if wall.rect.top > self.pacman.rect.centery:
+                    self.pacman.moving_down = False
+                    # self.pacman.rect.y -= 2
+
+                print("Brick x {} brick y {} ".format(wall.rect.x, wall.rect.y))
+
 
     def check_events(self):
         """Check for any keyboard events"""
@@ -137,10 +181,11 @@ class PacmanPortal:
         """Initialize all game objects"""
 
         # Create a maze
-        self.maze = Maze(self.screen, "maze.txt")
+        self.maze = Maze(self.screen, "maze.txt", self.settings.pacman_speed)
 
         # Create pacman
-        self.pacman = Pacman(self.screen, self.settings.pacman_speed)
+        self.pacman = self.maze.pacman
+            # Pacman(self.screen, self.settings.pacman_speed, (30, 30))
 
         # Create ghosts
         self.blinky = Ghost(self.screen, "blinky", (500, 500))
@@ -178,6 +223,7 @@ class PacmanPortal:
 
         # While the game is active, show all game objects
         if self.stats.game_active:
+            self.scoreboard.draw()
             self.maze.show_maze()
             self.pacman.blitme()
             self.blinky.blitme()
