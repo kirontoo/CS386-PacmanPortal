@@ -13,7 +13,7 @@ class GameStats:
         self.reset()
 
         # Start game in a inactive state.
-        self.game_active = False
+        self.game_active = True
 
         # Start Highscore screen in inactive state.
         self.hs_active = False

@@ -7,22 +7,24 @@ from pygame.sprite import Group
 from brick import Brick
 from cherry import Cherry
 from pellet import Pellet
-
+from pacman import Pacman
 
 class Maze:
     """Build a maze level"""
 
-    def __init__(self, screen, file):
+    def __init__(self, screen, file, pacman_speed):
         self.maze_file = file
         self.screen = screen
         self.screen_rect = screen.get_rect()
+
+        self.pacman_speed = pacman_speed
 
         self.grid = None
         self.dir = file
 
         # Grid objects
         self.bricks = Group()
-        self.pwr_ups = Group()
+        self.fruits = Group()
         self.pellets = Group()
 
         self.build()
@@ -66,11 +68,17 @@ class Maze:
                 new_brick = Brick(self.screen, (pos_x, pos_y))
                 self.bricks.add(new_brick)
 
-            # Build cherry power ups
-            if c == 'c':
-                pwr_up_cherry = Cherry(self.screen, (pos_x, pos_y))
-                self.pwr_ups.add(pwr_up_cherry)
+            # Build pacman
+            if c == 'p':
+                self.pacman = Pacman(self.screen, self.pacman_speed, (pos_x, pos_y))
 
+
+            # Build fruits
+            if c == 'c':
+                fruit_cherry = Cherry(self.screen, (pos_x, pos_y))
+                self.fruits.add(fruit_cherry)
+
+            # Build pellets
             if c == '.':
                 pellet = Pellet(self.screen, (pos_x, pos_y))
                 self.pellets.add(pellet)
@@ -85,6 +93,9 @@ class Maze:
         """Set dynamic screen size"""
         width = self.get_screen_width()
         height = self.get_screen_height()
+
+        # Add to height for scoreboard
+        height += 200
 
         self.screen = pygame.display.set_mode(
             (width, height)
@@ -120,7 +131,7 @@ class Maze:
         for brick in self.bricks:
             brick.blitme()
 
-        for pwr_up in self.pwr_ups:
+        for pwr_up in self.fruits:
             pwr_up.blitme()
 
         for pellet in self.pellets:
