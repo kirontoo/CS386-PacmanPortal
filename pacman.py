@@ -3,13 +3,16 @@
 
 import os
 import pygame
+from pygame.sprite import Sprite
 
 
-class Pacman:
+class Pacman(Sprite):
     """Create a pacman object"""
 
     def __init__(self, screen, speed, pos=(0, 0)):
         """Initialize pacman"""
+        super(Pacman, self).__init__()
+
         self.screen = screen
         self.screen_rect = screen.get_rect()
         self.x, self.y = pos

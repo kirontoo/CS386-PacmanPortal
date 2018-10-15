@@ -11,12 +11,12 @@ ghost_types = ["inky", "pinky", "blinky", "clyde"]
 class Ghost(Sprite):
     """Create a ghost object"""
 
-    def __init__(self, screen, type="inky", pos=(0, 0)):
+    def __init__(self, screen, ghost_type="inky", pos=(0, 0)):
         """Initialize Ghost"""
 
         super(Ghost, self).__init__()
 
-        self.type = type
+        self.type = ghost_type
         self.screen = screen
         self.screen_rect = screen.get_rect()
         self.x, self.y = pos

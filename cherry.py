@@ -5,21 +5,22 @@ import pygame
 import os
 from pygame.sprite import Sprite
 
-class Cherry(Sprite):
-    """Create a power up cherry object."""
 
-    def __init__(self, screen, pos=(0,0)):
-        """Initialize Cherry Power up"""
+class Cherry(Sprite):
+    """Create a Fruit cherry object."""
+
+    def __init__(self, screen, pos=(0, 0)):
+        """Initialize Cherry Fruit"""
 
         super(Cherry, self).__init__()
 
         self.screen = screen
         self.screen_rect = screen.get_rect()
         self.x, self.y = pos
-        self.dir = "assets/sprites/power_ups"
+        self.dir = "assets/sprites/fruits"
 
         # Load cherry sprite
-        self.image = pygame.image.load(os.path.join(self.dir, "power_up_cherry.png"))
+        self.image = pygame.image.load(os.path.join(self.dir, "fruit_cherry.png"))
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = self.x, self.y
 
