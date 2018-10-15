@@ -36,7 +36,6 @@ class PacmanPortal:
         self.mixer = Sounds()
         self.start_screen = StartScreen(self.screen, self.settings.screen_bg_color,
                                         "Pacman", "Portal")
-        self.scoreboard = Scoreboard(self.screen, self.stats)
         # Initialize game_objects
         self.create_game_objects()
 
@@ -182,6 +181,9 @@ class PacmanPortal:
 
         # Create a maze
         self.maze = Maze(self.screen, "maze.txt", self.settings.pacman_speed)
+
+        # Create scoreboard
+        self.scoreboard = Scoreboard(self.screen, self.stats)
 
         # Create pacman
         self.pacman = self.maze.pacman
