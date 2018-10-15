@@ -21,8 +21,6 @@ class Scoreboard():
         self.font = pygame.font.SysFont(None, 48)
 
         # Prepare the initial score images.
-        self.lives = Group()
-
         self.prep_score()
         # self.prep_high_score()
         # self.prep_level()
@@ -65,6 +63,10 @@ class Scoreboard():
         # Position it at the bottom of the screen
         self.lives_rect.x = self.screen_rect.centerx
         self.lives_rect.y = self.screen_rect.height - 80
+
+        self.lives = Group()
+
+        print("lives: {}".format(self.stats.current_lives))
 
         for life in range(self.stats.current_lives):
             pacman = Pacman(self.screen, 0)
@@ -124,6 +126,6 @@ class Scoreboard():
         # self.screen.blit(self.high_score_image, self.high_score_rect)
         # self.screen.blit(self.level_image, self.level_rect)
 
-        # Draw ships.
+        # Draw lives.
         self.screen.blit(self.lives_image, self.lives_rect)
         self.lives.draw(self.screen)
