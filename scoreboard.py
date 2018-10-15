@@ -66,8 +66,7 @@ class Scoreboard():
 
         self.lives = Group()
 
-        print("lives: {}".format(self.stats.current_lives))
-
+        # Create sprites to indicate number of lives
         for life in range(self.stats.current_lives):
             pacman = Pacman(self.screen, 0)
             pacman.rect.y = self.screen_rect.height - 80

@@ -9,6 +9,7 @@ from cherry import Cherry
 from pellet import Pellet
 from pacman import Pacman
 
+
 class Maze:
     """Build a maze level"""
 
@@ -18,7 +19,9 @@ class Maze:
         self.screen_rect = screen.get_rect()
 
         self.pacman_speed = pacman_speed
+        self.pacman_init_pos = None
 
+        self.brick_size = 0
         self.grid = None
         self.dir = file
 
@@ -72,7 +75,8 @@ class Maze:
             # Build pacman
             if c == 'p':
                 self.pacman = Pacman(self.screen, self.pacman_speed, (pos_x, pos_y))
-
+                # Save pacman's initial position.
+                self.pacman_init_pos = (pos_x, pos_y)
 
             # Build fruits
             if c == 'c':

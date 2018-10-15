@@ -3,9 +3,10 @@
 
 import pygame
 import sys
+from pygame.sprite import Group
+from pacman import Pacman
 from settings import Settings
 from maze import Maze
-from pacman import Pacman
 from ghost import Ghost
 from game_stats import GameStats
 from start_screen import StartScreen
@@ -33,6 +34,7 @@ class PacmanPortal:
         )
 
         self.maze = None
+        self.ghosts = Group()
         self.mixer = Sounds()
         self.start_screen = StartScreen(self.screen, self.settings.screen_bg_color,
                                         "Pacman", "Portal")
@@ -86,6 +88,25 @@ class PacmanPortal:
         if cherry_collisions:
             self.mixer.play_sound(self.mixer.fruit_eaten, 0)
             print("cherry power up!")
+
+        # Check for pacman collisions with ghosts
+        ghost_collisions = pygame.sprite.spritecollide(self.pacman, self.ghosts, False)
+
+        if ghost_collisions:
+            print("ghosts!! Oh no!")
+
+            for ghost in ghost_collisions:
+                if not ghost.scared and self.stats.current_lives > 0:
+                    # If ghost is not scared, pacman dies and reset to original position
+
+                    # Reset pacman
+                    self.pacman = Pacman(self.screen, self.settings.pacman_speed, self.maze.pacman_init_pos)
+
+                    # subtract pacman lives
+                    self.stats.current_lives -= 1
+
+                    self.scoreboard.prep_lives()
+                    self.scoreboard.prep_score()
 
         # Check collisions with walls.
         wall_collisions = pygame.sprite.spritecollide(self.pacman, self.maze.bricks, False)
@@ -187,13 +208,12 @@ class PacmanPortal:
 
         # Create pacman
         self.pacman = self.maze.pacman
-            # Pacman(self.screen, self.settings.pacman_speed, (30, 30))
 
         # Create ghosts
-        self.blinky = Ghost(self.screen, "blinky", (500, 500))
-        self.clyde = Ghost(self.screen, "clyde", (600, 500))
-        self.inky = Ghost(self.screen, "inky", (700, 500))
-        self.pinky = Ghost(self.screen, "pinky", (800, 500))
+        self.ghosts.add(Ghost(self.screen, "blinky", (500, 550)))
+        self.ghosts.add(Ghost(self.screen, "clyde", (600, 550)))
+        self.ghosts.add(Ghost(self.screen, "inky", (700, 550)))
+        self.ghosts.add(Ghost(self.screen, "pinky", (800, 550)))
 
     def on_button_clicked(self, btn, pos):
         """Check if the button has been pressed."""
@@ -212,10 +232,8 @@ class PacmanPortal:
     def update_objects(self):
         """Update all game objects"""
         self.pacman.update()
-        self.blinky.update()
-        self.inky.update()
-        self.pinky.update()
-        self.clyde.update()
+        for ghost in self.ghosts:
+            ghost.update()
 
     def update_screen(self):
         """Update the screen"""
@@ -225,13 +243,15 @@ class PacmanPortal:
 
         # While the game is active, show all game objects
         if self.stats.game_active:
+            # Disable the mouse
+            pygame.mouse.set_visible(False)
+
             self.scoreboard.draw()
             self.maze.show_maze()
             self.pacman.blitme()
-            self.blinky.blitme()
-            self.inky.blitme()
-            self.pinky.blitme()
-            self.clyde.blitme()
+
+            for ghost in self.ghosts:
+                ghost.blitme()
         else:
             # Show the start screen when game is inactive
             self.start_screen.draw()
