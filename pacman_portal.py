@@ -77,6 +77,7 @@ class PacmanPortal:
             for pellet in pellet_collisions:
                 if pellet.type == "pwr":
                     print("ghosts scared")
+                    self.mixer.play_sound(self.mixer.ghost_scared, 0)
                     self.stats.current_score += self.settings.pwr_pellet_points
                 else:
                     self.stats.current_score += self.settings.pellet_points
