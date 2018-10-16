@@ -99,6 +99,8 @@ class PacmanPortal:
                 if not ghost.scared and not ghost.dead and self.stats.current_lives > 0:
                     # If ghost is not scared, pacman dies and reset to original position
 
+                    self.mixer.play_sound(self.mixer.life_lost, 0)
+
                     # Reset pacman
                     self.pacman = Pacman(self.screen, self.settings.pacman_speed, self.maze.pacman_init_pos)
 
@@ -111,6 +113,7 @@ class PacmanPortal:
 
                 elif ghost.scared:
                     # Ghosts are scared, pacman can eat them. Ghosts run back and respawn.
+                    self.mixer.play_sound(self.mixer.ghost_eaten, 0)
                     ghost.scared = False
                     ghost.dead = True
 
@@ -118,11 +121,17 @@ class PacmanPortal:
                     # Game over
                     print("game over")
 
+                    # Play game over music
                     pygame.time.wait(5000)
 
                     # Go back to start screen
                     self.stats.game_active = False
                     pygame.mouse.set_visible(True)
+
+                    # Reset game
+                    self.stats.reset()
+                    self.maze = self.maze = Maze(self.screen, "maze.txt", self.settings.pacman_speed)
+                    self.pacman = self.maze.pacman
 
         # Check collisions with walls.
         wall_collisions = pygame.sprite.spritecollide(self.pacman, self.maze.bricks, False)
