@@ -79,6 +79,10 @@ class PacmanPortal:
                     print("ghosts scared")
                     self.mixer.play_sound(self.mixer.ghost_scared, 0)
                     self.stats.current_score += self.settings.pwr_pellet_points
+
+                    # Make all ghosts scared
+                    for ghost in self.ghosts:
+                        ghost.scared = True
                 else:
                     self.stats.current_score += self.settings.pellet_points
 
@@ -87,8 +91,10 @@ class PacmanPortal:
         # Check for pacman munching on power up cherry collisions
         cherry_collisions = pygame.sprite.spritecollide(self.pacman, self.maze.fruits, True)
         if cherry_collisions:
-            self.mixer.play_sound(self.mixer.fruit_eaten, 0)
-            print("cherry power up!")
+            for fruit in cherry_collisions:
+                self.mixer.play_sound(self.mixer.fruit_eaten, 0)
+                self.stats.current_score += fruit.points
+                self.scoreboard.prep_score()
 
         # Check for pacman collisions with ghosts
         ghost_collisions = pygame.sprite.spritecollide(self.pacman, self.ghosts, False)
@@ -133,6 +139,13 @@ class PacmanPortal:
                     self.stats.reset()
                     self.maze = self.maze = Maze(self.screen, "maze.txt", self.settings.pacman_speed)
                     self.pacman = self.maze.pacman
+                    self.ghosts = self.maze.ghosts
+
+                    self.pacman.moving_left = False
+                    self.pacman.moving_right = False
+                    self.pacman.moving_up = False
+                    self.pacman.moving_down = False
+
                     self.scoreboard.prep_score()
                     self.scoreboard.prep_lives()
 
@@ -158,7 +171,6 @@ class PacmanPortal:
                     # self.pacman.rect.y -= 2
 
                 print("Brick x {} brick y {} ".format(wall.rect.x, wall.rect.y))
-
 
     def check_events(self):
         """Check for any keyboard events"""
@@ -239,10 +251,7 @@ class PacmanPortal:
         self.pacman = self.maze.pacman
 
         # Create ghosts
-        self.ghosts.add(Ghost(self.screen, "blinky", (500, 550)))
-        self.ghosts.add(Ghost(self.screen, "clyde", (600, 550)))
-        self.ghosts.add(Ghost(self.screen, "inky", (700, 550)))
-        self.ghosts.add(Ghost(self.screen, "pinky", (800, 550)))
+        self.ghosts = self.maze.ghosts
 
     # #     TESTING STUFF
     #     for ghost in self.ghosts:

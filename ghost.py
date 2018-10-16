@@ -48,6 +48,9 @@ class Ghost(Sprite):
         self.scared = False
         self.dead = False
 
+        # Set frame counts
+        self.frame_count = 0
+
     # TODO: set __str__
 
     def load(self):
@@ -74,21 +77,32 @@ class Ghost(Sprite):
     def set_speed(self):
         """Set the ghost's movement speed by type of ghost"""
         if self.type == "pinky":
-            self.movement_speed = 5
+            self.movement_speed = 1
         if self.type == "blinky":
-            self.movement_speed = 5
+            self.movement_speed = 1
         if self.type == "inky":
-            self.movement_speed = 5
+            self.movement_speed = 1
         if self.type == "clyde":
-            self.movement_speed = 5
+            self.movement_speed = 1
 
     def update(self):
         """Update the ghost's position based on movement flag and state."""
 
         if self.scared:
             self.image = self.scared_sprite
+            self.frame_count += 1
+
+            seconds = self.frame_count // 60
+
+            # After 5 seconds, ghost no longer scared
+            if seconds >= 5:
+                self.scared = False
+
         if self.dead:
             self.image = self.animated_eyes[0]
+
+        if not self.scared:
+            self.frame_count = 0
 
         # Update movement animation and position
         if self.moving_right:
