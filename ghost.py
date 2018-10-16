@@ -23,6 +23,10 @@ class Ghost(Sprite):
         self.movement_speed = 0
         self.dir = "assets/sprites/ghost_" + self.type
 
+        # Save original position
+        self.original_pos_x = self.x
+        self.original_pos_y = self.y
+
         # Load ghost animations
         self.animated_sprites = []
         self.animated_eyes = []
@@ -80,6 +84,11 @@ class Ghost(Sprite):
 
     def update(self):
         """Update the ghost's position based on movement flag and state."""
+
+        if self.scared:
+            self.image = self.scared_sprite
+        if self.dead:
+            self.image = self.animated_eyes[0]
 
         # Update movement animation and position
         if self.moving_right:

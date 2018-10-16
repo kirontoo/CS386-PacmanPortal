@@ -36,10 +36,10 @@ class PacmanPortal:
         self.maze = None
         self.ghosts = Group()
         self.mixer = Sounds()
-        self.start_screen = StartScreen(self.screen, self.settings.screen_bg_color,
-                                        "Pacman", "Portal")
+
         # Initialize game_objects
         self.create_game_objects()
+
 
         # Update screen width and height
         self.settings.screen_width = self.maze.screen_rect.width
@@ -96,23 +96,36 @@ class PacmanPortal:
             print("ghosts!! Oh no!")
 
             for ghost in ghost_collisions:
-                if not ghost.scared and self.stats.current_lives > 0:
+                if not ghost.scared and not ghost.dead and self.stats.current_lives > 0:
                     # If ghost is not scared, pacman dies and reset to original position
 
                     # Reset pacman
                     self.pacman = Pacman(self.screen, self.settings.pacman_speed, self.maze.pacman_init_pos)
 
-                    # subtract pacman lives
+                    # subtract lives
                     self.stats.current_lives -= 1
 
+                    # redraw game stats
                     self.scoreboard.prep_lives()
                     self.scoreboard.prep_score()
 
+                elif ghost.scared:
+                    # Ghosts are scared, pacman can eat them. Ghosts run back and respawn.
+                    ghost.scared = False
+                    ghost.dead = True
+
+                else:
+                    # Game over
+                    print("game over")
+
+                    pygame.time.wait(5000)
+
+                    # Go back to start screen
+                    self.stats.game_active = False
+                    pygame.mouse.set_visible(True)
+
         # Check collisions with walls.
         wall_collisions = pygame.sprite.spritecollide(self.pacman, self.maze.bricks, False)
-
-        # save current pacman location
-        pos = (self.pacman.rect.x, self.pacman.rect.y)
 
         if wall_collisions:
             for wall in wall_collisions:
@@ -203,6 +216,10 @@ class PacmanPortal:
         # Create a maze
         self.maze = Maze(self.screen, "maze.txt", self.settings.pacman_speed)
 
+        # Create the start screen
+        self.start_screen = StartScreen(self.screen, self.settings.screen_bg_color,
+                                        "Pacman", "Portal")
+
         # Create scoreboard
         self.scoreboard = Scoreboard(self.screen, self.stats)
 
@@ -214,6 +231,10 @@ class PacmanPortal:
         self.ghosts.add(Ghost(self.screen, "clyde", (600, 550)))
         self.ghosts.add(Ghost(self.screen, "inky", (700, 550)))
         self.ghosts.add(Ghost(self.screen, "pinky", (800, 550)))
+
+    # #     TESTING STUFF
+    #     for ghost in self.ghosts:
+    #         ghost.scared = True
 
     def on_button_clicked(self, btn, pos):
         """Check if the button has been pressed."""
