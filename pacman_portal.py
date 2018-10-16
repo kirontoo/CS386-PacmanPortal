@@ -132,6 +132,8 @@ class PacmanPortal:
                     self.stats.reset()
                     self.maze = self.maze = Maze(self.screen, "maze.txt", self.settings.pacman_speed)
                     self.pacman = self.maze.pacman
+                    self.scoreboard.prep_score()
+                    self.scoreboard.prep_lives()
 
         # Check collisions with walls.
         wall_collisions = pygame.sprite.spritecollide(self.pacman, self.maze.bricks, False)
