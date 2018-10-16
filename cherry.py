@@ -18,6 +18,7 @@ class Cherry(Sprite):
         self.screen_rect = screen.get_rect()
         self.x, self.y = pos
         self.dir = "assets/sprites/fruits"
+        self.points = 100
 
         # Load cherry sprite
         self.image = pygame.image.load(os.path.join(self.dir, "fruit_cherry.png"))

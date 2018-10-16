@@ -8,6 +8,7 @@ from brick import Brick
 from cherry import Cherry
 from pellet import Pellet
 from pacman import Pacman
+from ghost import Ghost
 
 
 class Maze:
@@ -29,6 +30,8 @@ class Maze:
         self.bricks = Group()
         self.fruits = Group()
         self.pellets = Group()
+        self.ghosts = Group()
+        self.pacman = None
 
         self.build()
         self.set_screen_size()
@@ -73,24 +76,40 @@ class Maze:
                 self.bricks.add(new_brick)
 
             # Build pacman
-            if c == 'p':
+            if c == '^':
                 self.pacman = Pacman(self.screen, self.pacman_speed, (pos_x, pos_y))
                 # Save pacman's initial position.
                 self.pacman_init_pos = (pos_x, pos_y)
 
             # Build fruits
-            if c == 'c':
-                fruit_cherry = Cherry(self.screen, (pos_x, pos_y))
-                self.fruits.add(fruit_cherry)
+            if c == 'f':
+                fruit = Cherry(self.screen, (pos_x, pos_y))
+                self.fruits.add(fruit)
 
             # Build pellets
             if c == '.':
                 pellet = Pellet(self.screen, (pos_x, pos_y))
                 self.pellets.add(pellet)
 
-            if c == "o":
+            if c == "*":
                 pwr_pellet = Pellet(self.screen, (pos_x, pos_y), "pwr")
                 self.pellets.add(pwr_pellet)
+
+            if c == "b":
+                ghost = Ghost(self.screen, "blinky", (pos_x, pos_y))
+                self.ghosts.add(ghost)
+
+            if c == "c":
+                ghost = Ghost(self.screen, "clyde", (pos_x, pos_y))
+                self.ghosts.add(ghost)
+
+            if c == "i":
+                ghost = Ghost(self.screen, "inky", (pos_x, pos_y))
+                self.ghosts.add(ghost)
+
+            if c == "p":
+                ghost = Ghost(self.screen, "pinky", (pos_x, pos_y))
+                self.ghosts.add(ghost)
 
             pos_x += new_brick.rect.width
 
@@ -121,7 +140,6 @@ class Maze:
     def get_screen_height(self):
         """Find dynamic screen height"""
         column_of_bricks = 0
-        brick = Brick(self.screen)
 
         for c in self.grid:
             if c == '\n':
