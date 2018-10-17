@@ -32,7 +32,5 @@ class Settings:
 
     def initialize_dynamic_settings(self):
         """Initialize settings that change throughout the game."""
-        self.ghost_current_pt_value = 0
-
         self.screen_width = 1200
         self.screen_height = 800

@@ -39,6 +39,9 @@ class Pacman(Sprite):
         self.moving_left = False
         self.moving_right = False
 
+        # Count ghosts eaten
+        self.ghosts_eaten = 0
+
     def __str__(self):
         return "Pacman: x: {} y: {}".format(self.rect.x, self.rect.y)
 

@@ -12,6 +12,7 @@ from start_screen import StartScreen
 from highscore_screen import HighScoreScreen
 from scoreboard import Scoreboard
 from sounds import Sounds
+from text_image import TextImage
 
 # noinspection PyAttributeOutsideInit
 
@@ -36,6 +37,7 @@ class PacmanPortal:
         self.maze = None
         self.ghosts = Group()
         self.mixer = Sounds()
+        self.pop_up_points = []
 
         # Initialize game_objects
         self.create_game_objects()
@@ -43,6 +45,9 @@ class PacmanPortal:
         # Update screen width and height
         self.settings.screen_width = self.maze.screen_rect.width
         self.settings.screen_height = self.maze.screen_rect.height
+
+        # Count FPS
+        self.fps_counter = 0
 
     def run_game(self):
         print("run game")
@@ -80,6 +85,10 @@ class PacmanPortal:
                     self.mixer.play_sound(self.mixer.ghost_scared, 0)
                     self.stats.current_score += self.settings.pwr_pellet_points
 
+                    score = TextImage(self.screen, str(self.settings.pwr_pellet_points), 40,
+                                      (255, 255, 255), (0, 0, 0), (pellet.rect.x, pellet.rect.y))
+                    self.pop_up_points.append(score)
+
                     # Make all ghosts scared
                     for ghost in self.ghosts:
                         ghost.scared = True
@@ -95,6 +104,10 @@ class PacmanPortal:
                 self.mixer.play_sound(self.mixer.fruit_eaten, 0)
                 self.stats.current_score += fruit.points
                 self.scoreboard.prep_score()
+
+                score = TextImage(self.screen, str(fruit.points), 40,
+                                  (255, 255, 255), (0, 0, 0), (pellet.rect.x, pellet.rect.y))
+                self.pop_up_points.append(score)
 
         # Check for pacman collisions with ghosts
         ghost_collisions = pygame.sprite.spritecollide(self.pacman, self.ghosts, False)
@@ -118,13 +131,23 @@ class PacmanPortal:
                     self.scoreboard.prep_lives()
                     self.scoreboard.prep_score()
 
-                elif ghost.scared:
+                elif ghost.scared and not ghost.dead:
                     # Ghosts are scared, pacman can eat them. Ghosts run back and respawn.
                     self.mixer.play_sound(self.mixer.ghost_eaten, 0)
-                    ghost.scared = False
                     ghost.dead = True
+                    ghost.scared = False
 
-                else:
+                    # Add points to current score
+                    self.pacman.ghosts_eaten += 1
+                    total_points = self.settings.ghost_points * self.pacman.ghosts_eaten
+                    self.stats.current_score += total_points
+
+                    # Show points earned
+                    score = TextImage(self.screen, str(total_points), 40,
+                                      (255, 255, 255), (0, 0, 0), (ghost.rect.x, ghost.rect.y))
+                    self.pop_up_points.append(score)
+
+                elif not ghost.dead and not ghost.scared:
                     # Game over
                     print("game over")
 
@@ -272,6 +295,23 @@ class PacmanPortal:
         # Create ghost
         self.ghosts = self.maze.ghosts
 
+    def draw_pop_up_points(self):
+        """Show points earned when pacman eats a power pellet, fruit or ghost"""
+        if self.pop_up_points:
+            self.fps_counter += 1
+            seconds = self.fps_counter // 60
+
+            for pop_up in self.pop_up_points:
+                pop_up.draw()
+
+                # Make pop up points disappear after 1 second
+                if seconds >= 1:
+                    self.pop_up_points.remove(pop_up)
+
+        # Reset FPS counter
+        if not self.pop_up_points:
+            self.fps_counter = 0
+
     def on_button_clicked(self, btn, pos):
         """Check if the button has been pressed."""
         m_x, m_y = pos
@@ -315,12 +355,19 @@ class PacmanPortal:
             # Disable the mouse
             pygame.mouse.set_visible(False)
 
+            # Draw scoreboard and maze
             self.scoreboard.draw()
             self.maze.show_maze()
+
+            # Show pop up points
+            self.draw_pop_up_points()
+
+            # Draw ghosts and pacman
             self.pacman.blitme()
 
             for ghost in self.ghosts:
                 ghost.blitme()
+
         else:
             # Show the start screen when game is inactive
             if self.stats.hs_active:
