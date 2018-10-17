@@ -3,6 +3,7 @@
 
 import pygame.font
 
+
 class Button:
 
     def __init__(self, screen, msg, txt_color, btn_color, pos=(0, 0)):
@@ -26,7 +27,8 @@ class Button:
         # The button message needs to be prepped only once.
         self.prep_msg()
 
-    # TODO: set __str__
+    def __str__(self):
+        return "{} Button, x: {} y: {}".format(self.msg, self.rect.x, self.rect.y)
 
     def prep_msg(self):
         """Turn msg into a rendered image and center text on the button."""
