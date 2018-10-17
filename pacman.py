@@ -61,6 +61,14 @@ class Pacman(Sprite):
         self.rect.x, self.rect.y = self.x, self.y
         self.image = self.animated_right[0]
 
+    def adjust_position(self):
+        """Adjust pacman's position to snap to the grid"""
+        if self.rect.x % 30 != 0:
+            self.rect.x -= (self.rect.x % 30)
+
+        if self.rect.y % 30 != 0:
+            self.rect.y -= (self.rect.y % 30)
+
     def update(self):
         """Update pacman's position based on movement flag."""
 

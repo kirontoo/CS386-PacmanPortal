@@ -7,7 +7,6 @@ from pygame.sprite import Group
 from pacman import Pacman
 from settings import Settings
 from maze import Maze
-from ghost import Ghost
 from game_stats import GameStats
 from start_screen import StartScreen
 from scoreboard import Scoreboard
@@ -40,7 +39,6 @@ class PacmanPortal:
         # Initialize game_objects
         self.create_game_objects()
 
-
         # Update screen width and height
         self.settings.screen_width = self.maze.screen_rect.width
         self.settings.screen_height = self.maze.screen_rect.height
@@ -58,6 +56,7 @@ class PacmanPortal:
             if self.stats.game_active:
                 # Update all objects
                 self.update_objects()
+
                 # Check all collisions
                 self.check_collisions()
 
@@ -150,27 +149,36 @@ class PacmanPortal:
                     self.scoreboard.prep_lives()
 
         # Check collisions with walls.
-        wall_collisions = pygame.sprite.spritecollide(self.pacman, self.maze.bricks, False)
+        for brick in self.maze.bricks:
 
-        if wall_collisions:
-            for wall in wall_collisions:
-                if wall.rect.right <= self.pacman.rect.x:
-                    self.pacman.moving_left = False
-                    # self.pacman.rect.x += 2
+            a_x = brick.rect.centerx - brick.rect.width // 2
+            b_x = brick.rect.centerx + brick.rect.width // 2
+            a_y = brick.rect.centery - brick.rect.width // 2
+            b_y = brick.rect.centery + brick.rect.width // 2
 
-                if wall.rect.x > self.pacman.rect.centerx:
-                    self.pacman.moving_right = False
-                    # self.pacman.rect.x -= 2
+            if (self.pacman.rect.right >= a_x and self.pacman.rect.left <= b_x) and \
+                    (self.pacman.rect.centery >= a_y and self.pacman.rect.centery <= b_y):
+                self.pacman.moving_left = False
+                self.pacman.moving_right = False
 
-                if wall.rect.bottom > self.pacman.rect.centery:
-                    self.pacman.moving_up = False
-                    # self.pacman.rect.y += 2
+                # Realign Pacman to the grid
+                if self.pacman.rect.centerx % 15 != 0:
 
-                if wall.rect.top > self.pacman.rect.centery:
-                    self.pacman.moving_down = False
-                    # self.pacman.rect.y -= 2
+                    r = self.pacman.rect.centerx % 15
+                    if r < 10:
+                        self.pacman.rect.x -= r
 
-                print("Brick x {} brick y {} ".format(wall.rect.x, wall.rect.y))
+            if (self.pacman.rect.bottom >= a_y and self.pacman.rect.top <= b_y) and \
+                    (self.pacman.rect.centerx >= a_x and self.pacman.rect.centerx <= b_x):
+                self.pacman.moving_up = False
+                self.pacman.moving_down = False
+
+                # Realign Pacman to the grid
+                if self.pacman.rect.centery % 15 != 0:
+
+                    r = self.pacman.rect.centery % 15
+                    if r < 10:
+                        self.pacman.rect.y += r
 
     def check_events(self):
         """Check for any keyboard events"""
@@ -198,6 +206,8 @@ class PacmanPortal:
             self.pacman.moving_down = False
             self.pacman.moving_left = False
 
+            print("x {} y {}".format(self.pacman.rect.centerx, self.pacman.rect.centery))
+
         elif event.key == pygame.K_LEFT:
             self.pacman.moving_left = True
 
@@ -205,6 +215,8 @@ class PacmanPortal:
             self.pacman.moving_up = False
             self.pacman.moving_down = False
             self.pacman.moving_right = False
+
+            print("x {} y {}".format(self.pacman.rect.centerx, self.pacman.rect.centery))
 
         elif event.key == pygame.K_UP:
             self.pacman.moving_up = True
@@ -214,6 +226,8 @@ class PacmanPortal:
             self.pacman.moving_down = False
             self.pacman.moving_right = False
 
+            print("x {} y {}".format(self.pacman.rect.centerx, self.pacman.rect.centery))
+
         elif event.key == pygame.K_DOWN:
             self.pacman.moving_down = True
 
@@ -221,6 +235,8 @@ class PacmanPortal:
             self.pacman.moving_up = False
             self.pacman.moving_left = False
             self.pacman.moving_right = False
+
+            print("x {} y {}".format(self.pacman.rect.centerx, self.pacman.rect.centery))
 
     def check_keyup_events(self, event):
         """Respond to key releases"""

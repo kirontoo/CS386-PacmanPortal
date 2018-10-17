@@ -75,6 +75,11 @@ class Maze:
                 new_brick = Brick(self.screen, (pos_x, pos_y))
                 self.bricks.add(new_brick)
 
+            if c == '-':
+                # Create a gate
+                gate = Brick(self.screen, (pos_x, pos_y), "gate")
+                self.bricks.add(gate)
+
             # Build pacman
             if c == '^':
                 self.pacman = Pacman(self.screen, self.pacman_speed, (pos_x, pos_y))

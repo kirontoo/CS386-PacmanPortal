@@ -28,8 +28,6 @@ class Settings:
         # Ghost settings
         self.ghost_points = 100
 
-        # Fruit settings
-
         self.initialize_dynamic_settings()
 
     def initialize_dynamic_settings(self):
