@@ -51,7 +51,6 @@ class Ghost(Sprite):
         # Set frame counts
         self.frame_count = 0
 
-    # TODO: set __str__
     def __str__(self):
         return "Ghost - type: {}, x: {}, y: {}, scared: {}, dead: {}".format(self.type, self.rect.x,
                                                                              self.rect.y, self.scared,
@@ -92,7 +91,7 @@ class Ghost(Sprite):
     def update(self):
         """Update the ghost's position based on movement flag and state."""
 
-        if self.scared:
+        if self.scared and not self.dead:
             self.image = self.scared_sprite
             self.frame_count += 1
 
@@ -102,11 +101,12 @@ class Ghost(Sprite):
             if seconds >= 5:
                 self.scared = False
 
-        if self.dead:
+        if self.dead and not self.scared:
             self.image = self.animated_eyes[0]
 
-        if not self.scared:
+        if not self.dead and not self.scared:
             self.frame_count = 0
+            self.image = self.animated_sprites[2]
 
         # Update movement animation and position
         if self.moving_right:
