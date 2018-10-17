@@ -36,8 +36,6 @@ class Maze:
         self.build()
         self.set_screen_size()
 
-    # TODO: set __str__
-
     def load_maze_file(self):
         print("load maze")
         """Read a maze file."""

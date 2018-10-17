@@ -1,6 +1,8 @@
 # CS386 - Pacman Portal
 # Amy Nguyen-Dang
 
+
+# noinspection PyAttributeOutsideInit
 class GameStats:
     """Track statistics for the game."""
 
@@ -25,3 +27,4 @@ class GameStats:
         """Reset all statistics that can change during the game"""
         self.current_lives = self.max_lives
         self.current_score = 0
+

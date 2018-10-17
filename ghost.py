@@ -52,6 +52,10 @@ class Ghost(Sprite):
         self.frame_count = 0
 
     # TODO: set __str__
+    def __str__(self):
+        return "Ghost - type: {}, x: {}, y: {}, scared: {}, dead: {}".format(self.type, self.rect.x,
+                                                                             self.rect.y, self.scared,
+                                                                             self.dead)
 
     def load(self):
         """Load ghost animation images"""

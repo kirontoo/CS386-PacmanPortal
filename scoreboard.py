@@ -7,7 +7,8 @@ from pygame.sprite import Group
 from pacman import Pacman
 
 
-class Scoreboard():
+# noinspection PyAttributeOutsideInit
+class Scoreboard:
     """A class to report scoring information."""
 
     file = "highscores.txt"

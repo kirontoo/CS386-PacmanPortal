@@ -163,7 +163,7 @@ class PacmanPortal:
             b_y = brick.rect.centery + brick.rect.width // 2
 
             if (self.pacman.rect.right >= a_x and self.pacman.rect.left <= b_x) and \
-                    (self.pacman.rect.centery >= a_y and self.pacman.rect.centery <= b_y):
+                    (a_y <= self.pacman.rect.centery <= b_y):
                 self.pacman.moving_left = False
                 self.pacman.moving_right = False
 
@@ -175,7 +175,7 @@ class PacmanPortal:
                         self.pacman.rect.x -= r
 
             if (self.pacman.rect.bottom >= a_y and self.pacman.rect.top <= b_y) and \
-                    (self.pacman.rect.centerx >= a_x and self.pacman.rect.centerx <= b_x):
+                    (a_x <= self.pacman.rect.centerx <= b_x):
                 self.pacman.moving_up = False
                 self.pacman.moving_down = False
 

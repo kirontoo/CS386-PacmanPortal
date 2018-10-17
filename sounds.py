@@ -5,6 +5,7 @@ import pygame
 import os
 
 
+# noinspection PyAttributeOutsideInit
 class Sounds:
     """Play music, and sound effects"""
     dir = "assets/sounds/"
@@ -26,7 +27,8 @@ class Sounds:
 
         self.life_lost = pygame.mixer.Sound(os.path.join(self.dir, "life_lost.wav"))
 
-    def play_sound(self, sound, loop):
+    @staticmethod
+    def play_sound(sound, loop):
         """Play a sound effect"""
         channel = pygame.mixer.find_channel()
         if channel:

@@ -69,7 +69,6 @@ class StartScreen:
         y = self.play_button.rect.bottom + 20
         self.hs_button = Button(self.screen, "Highscores", text_color, (255, 120, 0), (x, y))
 
-
     def draw(self):
         """Draw the title, subtitle and all buttons"""
         self.screen.blit(self.title_image, self.title_rect)

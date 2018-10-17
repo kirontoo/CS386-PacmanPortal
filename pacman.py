@@ -39,10 +39,10 @@ class Pacman(Sprite):
         self.moving_left = False
         self.moving_right = False
 
-    # TODO: set __str__
+    def __str__(self):
+        return "Pacman: x: {} y: {}".format(self.rect.x, self.rect.y)
 
     def load(self):
-        print("Load pacman")
         """Load pacman animation images"""
         for i in range(8):
             image = "pacman_" + str(i) + ".png"

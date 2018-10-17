@@ -4,6 +4,7 @@
 import pygame.font
 
 
+# noinspection PyAttributeOutsideInit
 class Button:
 
     def __init__(self, screen, msg, txt_color, btn_color, pos=(0, 0)):
