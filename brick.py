@@ -8,16 +8,21 @@ from pygame.sprite import Sprite
 
 class Brick(Sprite):
 
-    def __init__(self, screen, pos=(0,0)):
+    def __init__(self, screen, pos=(0, 0), brick_type="brick"):
         """Initialize the brick and set its starting position"""
 
         super(Brick, self).__init__()
 
         self.screen = screen
         self.screen_rect = screen.get_rect()
+        self.type = brick_type
 
-        # Load the brick image and get its rect
-        self.image = pygame.image.load(os.path.join("assets/sprites", "brick2.png")).convert()
+        # Load the brick or gate image and get its rect
+        if self.type == "gate":
+            self.image = pygame.image.load(os.path.join("assets/sprites", "gate.png")).convert()
+        else:
+            self.image = pygame.image.load(os.path.join("assets/sprites", "brick2.png")).convert()
+
         self.rect = self.image.get_rect()
 
         self.rect.x, self.rect.y = pos
