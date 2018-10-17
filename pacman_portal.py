@@ -189,6 +189,7 @@ class PacmanPortal:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 # Check for button clicks
                 self.on_button_clicked(self.start_screen.play_button, (mouse_x, mouse_y))
+                self.on_button_clicked(self.start_screen.hs_button, (mouse_x, mouse_y))
             elif event.type == pygame.KEYDOWN:
                 self.check_keydown_events(event)
             # elif event.type == pygame.KEYUP:
@@ -206,8 +207,6 @@ class PacmanPortal:
             self.pacman.moving_down = False
             self.pacman.moving_left = False
 
-            print("x {} y {}".format(self.pacman.rect.centerx, self.pacman.rect.centery))
-
         elif event.key == pygame.K_LEFT:
             self.pacman.moving_left = True
 
@@ -215,8 +214,6 @@ class PacmanPortal:
             self.pacman.moving_up = False
             self.pacman.moving_down = False
             self.pacman.moving_right = False
-
-            print("x {} y {}".format(self.pacman.rect.centerx, self.pacman.rect.centery))
 
         elif event.key == pygame.K_UP:
             self.pacman.moving_up = True
@@ -226,8 +223,6 @@ class PacmanPortal:
             self.pacman.moving_down = False
             self.pacman.moving_right = False
 
-            print("x {} y {}".format(self.pacman.rect.centerx, self.pacman.rect.centery))
-
         elif event.key == pygame.K_DOWN:
             self.pacman.moving_down = True
 
@@ -235,8 +230,6 @@ class PacmanPortal:
             self.pacman.moving_up = False
             self.pacman.moving_left = False
             self.pacman.moving_right = False
-
-            print("x {} y {}".format(self.pacman.rect.centerx, self.pacman.rect.centery))
 
     def check_keyup_events(self, event):
         """Respond to key releases"""
@@ -266,26 +259,30 @@ class PacmanPortal:
         # Create pacman
         self.pacman = self.maze.pacman
 
-        # Create ghosts
+        # Create ghost
         self.ghosts = self.maze.ghosts
-
-    # #     TESTING STUFF
-    #     for ghost in self.ghosts:
-    #         ghost.scared = True
 
     def on_button_clicked(self, btn, pos):
         """Check if the button has been pressed."""
         m_x, m_y = pos
         btn_clicked = btn.rect.collidepoint(m_x, m_y)
 
-        if btn_clicked and not self.stats.game_active:
-            # Reset all settings
-            # Hide the mouse cursor.
-            pygame.mouse.set_visible(False)
+        if btn_clicked:
 
-            # Reset the game statistics.
-            self.stats.reset()
-            self.stats.game_active = True
+            # When the play button is clicked on
+            if not self.stats.game_active and btn.msg == "Play":
+                # Reset all settings
+                # Hide the mouse cursor.
+                pygame.mouse.set_visible(False)
+
+                # Reset the game statistics.
+                self.stats.reset()
+                self.stats.game_active = True
+
+            # When the high score button is clicked on
+            if not self.stats.game_active and btn.msg == "Highscores":
+                print("highscores!")
+
 
     def update_objects(self):
         """Update all game objects"""
