@@ -9,6 +9,7 @@ from settings import Settings
 from maze import Maze
 from game_stats import GameStats
 from start_screen import StartScreen
+from highscore_screen import HighScoreScreen
 from scoreboard import Scoreboard
 from sounds import Sounds
 
@@ -134,6 +135,10 @@ class PacmanPortal:
                     self.stats.game_active = False
                     pygame.mouse.set_visible(True)
 
+                    # Save highscore
+                    self.scoreboard.save_data()
+                    self.hs_screen.prep_scores()
+
                     # Reset game
                     self.stats.reset()
                     self.maze = self.maze = Maze(self.screen, "maze.txt", self.settings.pacman_speed)
@@ -145,6 +150,7 @@ class PacmanPortal:
                     self.pacman.moving_up = False
                     self.pacman.moving_down = False
 
+                    # Update scoreboard
                     self.scoreboard.prep_score()
                     self.scoreboard.prep_lives()
 
@@ -190,6 +196,7 @@ class PacmanPortal:
                 # Check for button clicks
                 self.on_button_clicked(self.start_screen.play_button, (mouse_x, mouse_y))
                 self.on_button_clicked(self.start_screen.hs_button, (mouse_x, mouse_y))
+                self.on_button_clicked(self.hs_screen.back_button, (mouse_x, mouse_y))
             elif event.type == pygame.KEYDOWN:
                 self.check_keydown_events(event)
             # elif event.type == pygame.KEYUP:
@@ -256,6 +263,9 @@ class PacmanPortal:
         # Create scoreboard
         self.scoreboard = Scoreboard(self.screen, self.stats)
 
+        # Create high scores screen
+        self.hs_screen = HighScoreScreen(self.screen)
+
         # Create pacman
         self.pacman = self.maze.pacman
 
@@ -281,8 +291,12 @@ class PacmanPortal:
 
             # When the high score button is clicked on
             if not self.stats.game_active and btn.msg == "Highscores":
-                print("highscores!")
+                print(btn)
+                self.stats.hs_active = True
 
+            if not self.stats.game_active and btn.msg == "Back":
+                print(btn)
+                self.stats.hs_active = False
 
     def update_objects(self):
         """Update all game objects"""
@@ -309,7 +323,10 @@ class PacmanPortal:
                 ghost.blitme()
         else:
             # Show the start screen when game is inactive
-            self.start_screen.draw()
+            if self.stats.hs_active:
+                self.hs_screen.draw()
+            else:
+                self.start_screen.draw()
 
         # Make the most recently drawn screen visible
         pygame.display.flip()

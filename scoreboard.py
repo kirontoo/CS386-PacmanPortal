@@ -10,6 +10,8 @@ from pacman import Pacman
 class Scoreboard():
     """A class to report scoring information."""
 
+    file = "highscores.txt"
+
     def __init__(self, screen, stats):
         """Initialize scorekeeping attributes."""
         self.screen = screen
@@ -25,7 +27,7 @@ class Scoreboard():
         # self.prep_high_score()
         # self.prep_level()
         self.prep_lives()
-        # self.load_data()
+        self.load_data()
 
     def prep_score(self):
         """Turn the score into a rendered image."""
@@ -76,25 +78,18 @@ class Scoreboard():
     def load_data(self):
         """Load all-time high score"""
         self.dir = os.path.dirname(__file__)
-        file = os.path.join(self.dir, self.ai_settings.hs_file)
+        file = os.path.join(self.dir, self.file)
 
-        # If the file doesn't exist, create one else load highscore
-        if os.path.exists(file):
+        # If the file doesn't exist, create one
+        if not os.path.exists(file):
 
-            with open(file, 'r') as f:
-                try:
-                    highest_score = f.readline()
-                    self.stats.high_score = int(highest_score)
-                except:
-                    self.stats.high_score = 0
-        else:
             f = open(file, 'w+')
             f.close()
 
     def save_data(self):
         """Save new highscore"""
-        with open(os.path.join(self.dir, self.ai_settings.hs_file), 'a') as f:
-            f.write(str(self.stats.score) + "\n")
+        with open(os.path.join(self.dir, self.file), 'a') as f:
+            f.write(str(self.stats.current_score) + "\n")
 
         self.sort_highscores()
 
@@ -102,13 +97,13 @@ class Scoreboard():
         """Sort all scores to find the highest score"""
         all_scores = []
 
-        f = open(os.path.join(self.dir, self.ai_settings.hs_file), 'r')
+        f = open(os.path.join(self.dir, self.file), 'r')
         fl = f.readlines()
         for x in fl:
             all_scores.append(int(x))
 
         # sort all scores
-        w = open(os.path.join(self.dir, self.ai_settings.hs_file), 'w')
+        w = open(os.path.join(self.dir, self.file), 'w')
         all_scores.sort(reverse=True)
 
         # write sorted scores to file

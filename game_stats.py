@@ -15,6 +15,7 @@ class GameStats:
         # Start game in a inactive state.
         self.game_active = False
 
+        self.hs_active = False
         self.game_over = False
 
         # Start Highscore screen in inactive state.

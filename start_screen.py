@@ -26,13 +26,15 @@ class StartScreen:
             self.subtitle = subtitle
             self.prep_subtitle()
 
-        # Create the play button
-        self.play_button = Button(self.screen, "Play", (255, 255, 255), (13, 255, 0))
+        # Create all buttons
+        self.play_button = None
+        self.hs_button = None
+        self.prep_buttons()
 
     def prep_title(self):
         """Prepare the title image"""
         font = pygame.font.SysFont(None, self.font_size)
-        text_color = (255, 241, 87)
+        text_color = (255, 245, 6)
 
         # Create and position the title
         self.title_image = font.render(self.title, True, text_color, self.bg_color)
@@ -53,9 +55,25 @@ class StartScreen:
         # Align it under the title
         self.subtitle_rect.top = self.title_rect.bottom
 
+    def prep_buttons(self):
+        """Prepare all buttons"""
+
+        text_color = (255, 255, 255)
+
+        # Create the play button
+        x = self.screen_rect.centerx
+        y = self.screen_rect.height - 250
+        self.play_button = Button(self.screen, "Play", text_color, (0, 198, 24), (x, y))
+
+        # Create high score button
+        y = self.play_button.rect.bottom + 20
+        self.hs_button = Button(self.screen, "Highscores", text_color, (255, 120, 0), (x, y))
+
+
     def draw(self):
-        """Draw the title, subtitle and play button"""
+        """Draw the title, subtitle and all buttons"""
         self.screen.blit(self.title_image, self.title_rect)
         self.screen.blit(self.subtitle_image, self.subtitle_rect)
 
         self.play_button.draw()
+        self.hs_button.draw()
