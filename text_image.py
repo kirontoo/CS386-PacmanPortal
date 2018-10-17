@@ -35,5 +35,4 @@ class TextImage:
         self.rect.x, self.rect.y = self.x, self.y
 
     def draw(self):
-        print("draw!")
         self.screen.blit(self.image, self.rect)

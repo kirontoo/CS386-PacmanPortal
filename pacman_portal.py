@@ -106,7 +106,7 @@ class PacmanPortal:
                 self.scoreboard.prep_score()
 
                 score = TextImage(self.screen, str(fruit.points), 40,
-                                  (255, 255, 255), (0, 0, 0), (pellet.rect.x, pellet.rect.y))
+                                  (255, 255, 255), (0, 0, 0), (fruit.rect.x, fruit.rect.y))
                 self.pop_up_points.append(score)
 
         # Check for pacman collisions with ghosts
