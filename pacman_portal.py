@@ -20,7 +20,6 @@ from text_image import TextImage
 class PacmanPortal:
 
     def __init__(self):
-        print("pacman portal init")
         """Initiate Pacman Portal game settings and objects"""
         pygame.init()
         pygame.display.set_caption("Pacman Portal")
@@ -50,7 +49,6 @@ class PacmanPortal:
         self.fps_counter = 0
 
     def run_game(self):
-        print("run game")
         """Run the game"""
         while True:
             # Limit FPS
@@ -81,7 +79,6 @@ class PacmanPortal:
 
             for pellet in pellet_collisions:
                 if pellet.type == "pwr":
-                    print("ghosts scared")
                     self.mixer.play_sound(self.mixer.ghost_scared, 0)
                     self.stats.current_score += self.settings.pwr_pellet_points
 
@@ -113,7 +110,6 @@ class PacmanPortal:
         ghost_collisions = pygame.sprite.spritecollide(self.pacman, self.ghosts, False)
 
         if ghost_collisions:
-            print("ghosts!! Oh no!")
 
             for ghost in ghost_collisions:
                 if not ghost.scared and not ghost.dead and self.stats.current_lives > 0:
@@ -149,8 +145,6 @@ class PacmanPortal:
 
                 elif not ghost.dead and not ghost.scared:
                     # Game over
-                    print("game over")
-
                     # Play game over music
                     pygame.time.wait(5000)
 
@@ -261,6 +255,17 @@ class PacmanPortal:
             self.pacman.moving_left = False
             self.pacman.moving_right = False
 
+        # Create portals on key presses for 'z' and 'x'
+        elif event.key == pygame.K_z:
+            print("Portal 1")
+            self.pacman.create_portal(self.maze, "1")
+            self.mixer.play_sound(self.mixer.portal_appears, 0)
+
+        elif event.key == pygame.K_x:
+            print("Portal 2")
+            self.pacman.create_portal(self.maze, "2")
+            self.mixer.play_sound(self.mixer.portal_appears, 0)
+
     def check_keyup_events(self, event):
         """Respond to key releases"""
         if event.key == pygame.K_RIGHT:
@@ -273,7 +278,6 @@ class PacmanPortal:
             self.pacman.moving_down = False
 
     def create_game_objects(self):
-        print("create game objects")
         """Initialize all game objects"""
 
         # Create a maze

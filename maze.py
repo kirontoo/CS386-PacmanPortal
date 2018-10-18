@@ -37,7 +37,6 @@ class Maze:
         self.set_screen_size()
 
     def load_maze_file(self):
-        print("load maze")
         """Read a maze file."""
 
         self.dir = "assets/mazes"
@@ -47,7 +46,6 @@ class Maze:
             self.grid = f.read()
 
     def build(self):
-        print("build maze")
         """Build maze"""
         self.load_maze_file()
 

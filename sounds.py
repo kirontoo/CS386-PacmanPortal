@@ -27,6 +27,7 @@ class Sounds:
 
         self.life_lost = pygame.mixer.Sound(os.path.join(self.dir, "life_lost.wav"))
 
+        self.portal_appears = pygame.mixer.Sound(os.path.join(self.dir, "portal_appears.wav"))
     @staticmethod
     def play_sound(sound, loop):
         """Play a sound effect"""
