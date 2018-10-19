@@ -4,7 +4,8 @@
 import os
 import pygame
 from pygame.sprite import Sprite
-from text_image import TextImage
+from pygame.sprite import Group
+from portal import Portal
 
 
 class Pacman(Sprite):
@@ -29,8 +30,6 @@ class Pacman(Sprite):
 
         self.rect = None
         self.image = None
-        self.portal1 = None
-        self.portal2 = None
         self.load()
 
         # For animation
@@ -45,15 +44,23 @@ class Pacman(Sprite):
         # Count ghosts eaten
         self.ghosts_eaten = 0
 
-        self.temp = None
+        # Portals
+        self.portals = Group()
 
     def __str__(self):
         return "Pacman: x: {} y: {}".format(self.rect.x, self.rect.y)
 
+    def add_portal(self, portal_type, direction, pos):
+        """Add a portal to the group and destroy the previous version"""
+        for portal in self.portals:
+            if portal.type == portal_type:
+                portal.kill()
+
+        portal = Portal(self.screen, portal_type, direction, pos)
+        self.portals.add(portal)
+
     def adjust_position(self):
         """Adjust pacman's position to snap to the grid"""
-        x = 0
-        y = 0
 
         # Adjust position for x-axis
         r = self.rect.x % 30
@@ -81,18 +88,12 @@ class Pacman(Sprite):
     def create_portal(self, maze, portal_type):
         """Create a portal based on the direction pacman is facing"""
 
-        # Save pacman's location
-        # find out which direction facing
         # use adjusted position to add size of brick to find nearest brick in grid
-
         x, y = self.adjust_position()
-        print("x {} y {}".format(self.rect.x, self.rect.y))
-
         found = False
 
         # Pacman facing right
         if self.image in self.animated_right:
-            print("facing right")
 
             # Find nearest brick on the right
             while x < self.screen_rect.width and not found:
@@ -100,18 +101,14 @@ class Pacman(Sprite):
 
                 for brick in maze.bricks:
                     if x == brick.rect.x and y == brick.rect.y:
-                        print("found")
-                        if portal_type == "1":
-                            self.portal1 = TextImage(self.screen, "1", 30, (0, 255, 0), (0, 0,0), (x, y))
-                        else:
-                            self.portal2 = TextImage(self.screen, "2", 30, (255, 0, 0), (0, 0,0), (x, y))
 
+                        # Add a portal
+                        self.add_portal(portal_type, "left", (x, y))
                         found = True
                         break
 
         # Pacman facing left
         elif self.image in self.animated_left:
-            print("facing left")
 
             # Find nearest brick on the left
             while x >= 0 and not found:
@@ -119,55 +116,107 @@ class Pacman(Sprite):
 
                 for brick in maze.bricks:
                     if x == brick.rect.x and y == brick.rect.y:
-                        print("found")
-                        if portal_type == "1":
-                            self.portal1 = TextImage(self.screen, "1", 30, (0, 255, 0), (0, 0, 0), (x, y))
-                        else:
-                            self.portal2 = TextImage(self.screen, "2", 30, (255, 0, 0), (0, 0, 0), (x, y))
 
+                        # Add a portal
+                        self.add_portal(portal_type, "right", (x, y))
                         found = True
                         break
 
         # Pacman facing up
         elif self.image in self.animated_up:
-            print("facing up")
 
-            # Find nearest brick on the above
+            # Find nearest brick above
             while y >= 0 and not found:
                 y -= maze.brick_size
 
                 for brick in maze.bricks:
                     if x == brick.rect.x and y == brick.rect.y:
-                        print("found")
-                        if portal_type == "1":
-                            self.portal1 = TextImage(self.screen, "1", 30, (0, 255, 0), (0, 0, 0), (x, y))
-                        else:
-                            self.portal2 = TextImage(self.screen, "2", 30, (255, 0, 0), (0, 0, 0), (x, y))
 
+                        # Add a portal
+                        self.add_portal(portal_type, "down", (x, y))
                         found = True
                         break
 
         # Pacman facing down
         elif self.image in self.animated_down:
-            print("facing down")
 
-            # Find nearest brick on the above
+            # Find nearest brick below
             while y <= self.screen_rect.height and not found:
                 y += maze.brick_size
 
                 for brick in maze.bricks:
                     if x == brick.rect.x and y == brick.rect.y:
-                        print("found")
-                        if portal_type == "1":
-                            self.portal1 = TextImage(self.screen, "1", 30, (0, 255, 0), (0, 0, 0), (x, y))
-                        else:
-                            self.portal2 = TextImage(self.screen, "2", 30, (255, 0, 0), (0, 0, 0), (x, y))
 
+                        # Add a portal
+                        self.add_portal(portal_type, "up", (x, y))
                         found = True
                         break
 
-        print(self.portal1)
-        print(self.portal2)
+    def enter_portal(self, portal):
+        """Enter a portal and teleport to the other portal."""
+        other_portal = None
+
+        # Find the other portal
+        for p in self.portals:
+            if p.type != portal.type:
+                other_portal = p
+
+        if not other_portal:
+            return
+
+        if other_portal.direction == "right":
+            # Teleport pacman to the right of the portal
+            self.x = other_portal.rect.x + other_portal.rect.width
+            self.y = other_portal.rect.y
+
+            # Set movement flags
+            self.moving_down = False
+            self.moving_up = False
+            self.moving_left = False
+            self.moving_right = True
+
+            self.image = self.animated_right[0]
+
+        elif other_portal.direction == "left":
+            # Teleport to the left of the portal
+            self.x = other_portal.rect.x - other_portal.rect.width
+            self.y = other_portal.rect.y
+
+            # Set movement flags
+            self.moving_down = False
+            self.moving_up = False
+            self.moving_left = True
+            self.moving_right = False
+
+            self.image = self.animated_left[0]
+
+        elif other_portal.direction == "up":
+            # Teleport to above the portal
+            self.x = other_portal.rect.x
+            self.y = other_portal.rect.y - other_portal.rect.height
+
+            # Set movement flags
+            self.moving_down = False
+            self.moving_up = True
+            self.moving_left = False
+            self.moving_right = False
+
+            self.image = self.animated_up[0]
+
+        elif other_portal.direction == "down":
+            # Teleport to below the portal
+            self.x = other_portal.rect.x
+            self.y = other_portal.rect.y + other_portal.rect.height
+
+            # Set movement flags
+            self.moving_down = True
+            self.moving_up = False
+            self.moving_left = False
+            self.moving_right = False
+
+            self.image = self.animated_down[0]
+
+        self.rect.x, self.rect.y = self.x, self.y
 
     def load(self):
         """Load pacman animation images"""
@@ -187,6 +236,22 @@ class Pacman(Sprite):
         self.rect = self.animated_right[0].get_rect()
         self.rect.x, self.rect.y = self.x, self.y
         self.image = self.animated_right[0]
+
+    def travel(self, portal):
+        """Travel through a existing portal."""
+
+        # Check if pacman is facing the portal
+        if self.image in self.animated_right and portal.direction == "left":
+            self.enter_portal(portal)
+
+        elif self.image in self.animated_left and portal.direction == "right":
+            self.enter_portal(portal)
+
+        elif self.image in self.animated_up and portal.direction == "down":
+            self.enter_portal(portal)
+
+        elif self.image in self.animated_down and portal.direction == "up":
+            self.enter_portal(portal)
 
     def update(self):
         """Update pacman's position based on movement flag."""
@@ -220,8 +285,5 @@ class Pacman(Sprite):
         """Draw pacman at its location"""
         self.screen.blit(self.image, self.rect)
 
-        if self.portal1:
-            self.portal1.draw()
-
-        if self.portal2:
-            self.portal2.draw()
+        for portal in self.portals:
+            portal.draw()

@@ -47,17 +47,6 @@ class Scoreboard:
         self.total_score_rect.x = self.score_rect.width + 15
         self.total_score_rect.y = self.score_rect.y
 
-    def prep_level(self):
-        """Turn the level into a rendered image."""
-        self.level_image = self.font.render(str(self.stats.level), True,
-                                            self.text_color,
-                                            self.ai_settings.bg_color)
-
-        # Position the level below the score.
-        self.level_rect = self.level_image.get_rect()
-        self.level_rect.right = self.score_rect.right
-        self.level_rect.top = self.score_rect.bottom + 10
-
     def prep_lives(self):
         """Show how many lives are left."""
         self.lives_image = self.font.render("Lives:", True, self.text_color, (0, 0, 0))

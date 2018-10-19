@@ -171,6 +171,15 @@ class PacmanPortal:
                     self.scoreboard.prep_score()
                     self.scoreboard.prep_lives()
 
+        # Check for collisions with portals
+        portal_collisions = pygame.sprite.spritecollide(self.pacman, self.pacman.portals, False)
+
+        if portal_collisions:
+            for portal in portal_collisions:
+
+                # Travel through a portal
+                self.pacman.travel(portal)
+
         # Check collisions with walls.
         for brick in self.maze.bricks:
 
@@ -216,8 +225,6 @@ class PacmanPortal:
                 self.on_button_clicked(self.hs_screen.back_button, (mouse_x, mouse_y))
             elif event.type == pygame.KEYDOWN:
                 self.check_keydown_events(event)
-            # elif event.type == pygame.KEYUP:
-            #     self.check_keyup_events(event)
 
     def check_keydown_events(self, event):
         """Respond to key presses"""
@@ -258,24 +265,13 @@ class PacmanPortal:
         # Create portals on key presses for 'z' and 'x'
         elif event.key == pygame.K_z:
             print("Portal 1")
-            self.pacman.create_portal(self.maze, "1")
+            self.pacman.create_portal(self.maze, 1)
             self.mixer.play_sound(self.mixer.portal_appears, 0)
 
         elif event.key == pygame.K_x:
             print("Portal 2")
-            self.pacman.create_portal(self.maze, "2")
+            self.pacman.create_portal(self.maze, 2)
             self.mixer.play_sound(self.mixer.portal_appears, 0)
-
-    def check_keyup_events(self, event):
-        """Respond to key releases"""
-        if event.key == pygame.K_RIGHT:
-            self.pacman.moving_right = False
-        elif event.key == pygame.K_LEFT:
-            self.pacman.moving_left = False
-        elif event.key == pygame.K_UP:
-            self.pacman.moving_up = False
-        elif event.key == pygame.K_DOWN:
-            self.pacman.moving_down = False
 
     def create_game_objects(self):
         """Initialize all game objects"""
