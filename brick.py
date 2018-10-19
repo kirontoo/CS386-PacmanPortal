@@ -21,7 +21,7 @@ class Brick(Sprite):
         if self.type == "gate":
             self.image = pygame.image.load(os.path.join("assets/sprites", "gate.png")).convert()
         else:
-            self.image = pygame.image.load(os.path.join("assets/sprites", "brick2.png")).convert()
+            self.image = pygame.image.load(os.path.join("assets/sprites", "brick.png")).convert()
 
         self.rect = self.image.get_rect()
 
