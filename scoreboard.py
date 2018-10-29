@@ -25,8 +25,6 @@ class Scoreboard:
 
         # Prepare the initial score images.
         self.prep_score()
-        # self.prep_high_score()
-        # self.prep_level()
         self.prep_lives()
         self.load_data()
 

@@ -3,9 +3,8 @@
 
 import pygame
 import os
+import math
 from pygame.sprite import Sprite
-
-ghost_types = ["inky", "pinky", "blinky", "clyde"]
 
 
 class Ghost(Sprite):
@@ -51,10 +50,226 @@ class Ghost(Sprite):
         # Set frame counts
         self.frame_count = 0
 
+        # Set Chase, and Scatter mode
+        self.chase = False
+        self.scatter = False
+
+        self.in_spawn = True
+
+        # Set destination
+        self.dest_x = 0
+        self.dest_y = 0
+
     def __str__(self):
-        return "Ghost - type: {}, x: {}, y: {}, scared: {}, dead: {}".format(self.type, self.rect.x,
-                                                                             self.rect.y, self.scared,
-                                                                             self.dead)
+        return "Ghost - type: {}, x: {}, y: {}, scared: {}, dead: {}".format(self.type, self.rect.x, self.rect.y, self.scared,self.dead)
+
+    def __adjust_position__(self):
+        """Adjust ghost's position to snap to the grid"""
+
+        # Adjust position for x-axis
+        r = self.rect.x % 30
+        if r != 0:
+            if r <= 16:
+                x = self.rect.x - r
+            else:
+                x = self.rect.x + (30 - r)
+
+        else:
+            x = self.rect.x
+
+        # Adjust position for y-axis
+        r = self.rect.y % 30
+        if r != 0:
+            if r <= 16:
+                y = self.rect.y - r
+            else:
+                y = self.rect.y + (30 - r)
+        else:
+            y = self.rect.y
+
+        return x, y
+
+    def __decide_direction__(self, x, y, bricks):
+        """Decide which path to take"""
+
+        # Check for walls
+        wall_left = self.__is_wall__(bricks, "left")
+        wall_right = self.__is_wall__(bricks, "right")
+        wall_up = self.__is_wall__(bricks, "up")
+        wall_down = self.__is_wall__(bricks, "down")
+
+        if x > y:
+            # Move towards destination horizontally
+            if self.dest_x < self.rect.x:
+                # If possible move left
+                if not wall_left:
+                    # Move left
+                    self.__move_left__()
+                else:
+                    # Move up or down towards destination instead
+                    if self.dest_y > self.rect.y:
+                        if not wall_down:
+                            self.__move_down__
+                    else:
+                        if not wall_up:
+                            self.__move_up__()
+            else:
+                # If possible move right
+                if not wall_right:
+                    self.__move_right__()
+                else:
+                    # Move up or down towards destination instead
+                    if self.dest_y > self.rect.y:
+                        if not wall_down:
+                            self.__move_down__
+                    else:
+                        if not wall_up:
+                            self.__move_up__()
+        else:
+            # Move towards destination vertically
+            if self.dest_y < self.rect.y:
+                # If possible move up
+                if not wall_up:
+                    self.__move_up__()
+                else:
+                    # Move left or right towards destination instead
+                    if self.dest_x < self.rect.x:
+                        if not wall_left:
+                            self.__move_left__()
+                        else:
+                            if not wall_right:
+                                self.__move_right__()
+            else:
+                # If possible move down
+                if not wall_down:
+                    self.__move_down__()
+                else:
+                    # Move left or right towards destination instead
+                    if self.dest_x < self.rect.x:
+                        if not wall_left:
+                            self.__move_left__()
+                        else:
+                            if not wall_right:
+                                self.__move_right__()
+
+    def __distance__(self, x, y):
+        """Claculate Linear distance"""
+        delx = self.__distanceX__(x)
+        dely = self.__distanceY__(y)
+
+        return math.sqrt(delx ** 2 + dely ** 2)
+
+    def __distanceX__(self, x):
+        """Calculate horizontal distance"""
+        return abs(self.rect.x - x)
+
+    def __distanceY__(self, y):
+        """Calculate vertical distance"""
+        return abs(self.rect.y - y)
+
+    def __is_wall__(self, bricks, dir):
+        """Check if there is a wall in front of ghost"""
+    
+        x, y = self.__adjust_position__()
+
+        for brick in bricks:
+            
+            a_x = brick.rect.centerx - brick.rect.width // 2
+            b_x = brick.rect.centerx + brick.rect.width // 2
+            a_y = brick.rect.centery - brick.rect.width // 2
+            b_y = brick.rect.centery + brick.rect.width // 2
+
+            # Look for a wall within range of the ghost
+            if (self.rect.right >= a_x and self.rect.left <= b_x) and (a_y <= self.rect.centery <= b_y) and brick.type == "brick":
+
+                # Check for wall on the left
+                if (brick.rect.right >= self.rect.left) and dir == "left":
+                    return True
+
+                # Check for wall on the right
+                if brick.rect.left <= self.rect.right and dir == "right":
+
+                    return True
+
+            if (self.rect.bottom >= a_y and self.rect.top <= b_y) and (a_x <= self.rect.centerx <= b_x) and brick.type == "brick":
+
+                # Check for on the top
+                if (brick.rect.bottom >= self.rect.top) and dir == "up":
+
+                    return True
+
+                # Check for wall on the bottom
+                if (brick.rect.top <= self.rect.bottom) and dir == "down":
+                    return True
+
+        return False
+    
+    def __move_left__(self):
+        self.moving_left = True
+        self.moving_right = False
+        self.moving_up = False
+        self.moving_down = False
+
+    def __move_right__(self):
+        self.moving_left = False
+        self.moving_right = True
+        self.moving_up = False
+        self.moving_down = False
+
+    def __move_up__(self):
+        self.moving_left = False
+        self.moving_right = False
+        self.moving_up = True
+        self.moving_down = False
+
+    def __move_down__(self):
+        self.moving_left = False
+        self.moving_right = False
+        self.moving_up = False
+        self.moving_down = True
+
+    def __blinky__(self, pacman, bricks):
+
+        # Find distance between Blinky and Pacman
+        x = self.__distanceX__(pacman.rect.x)
+        y = self.__distanceY__(pacman.rect.y)
+
+        # Exit Spawn
+        if self.in_spawn:
+            self.exit_spawn(bricks)
+        else: 
+            # Set destination
+            self.dest_x = pacman.rect.x
+            self.dest_y = pacman.rect.y
+
+        # Decide direction to move to
+        self.__decide_direction__(x, y, bricks)
+
+    def exit_spawn(self, bricks):
+        """Exit from spawn"""
+
+        # Set flag after ghost exits spawn
+        if self.rect.x == self.dest_x and self.rect.y == self.dest_y:
+            self.in_spawn = False
+            return
+        
+        # Find the gate
+        for brick in bricks:
+            if brick.type == "gate":
+                self.dest_x = brick.rect.x
+                self.dest_y = brick.rect.y - brick.rect.height
+                break
+
+    def find_path(self, pacman, bricks):
+        """Find path to pacman."""
+        if self.type == "inky":
+            pass
+        if self.type == "pinky":
+            pass
+        if self.type == "blinky":
+            self.__blinky__(pacman, bricks)
+        if self.type == "clyde":
+            pass
 
     def load(self):
         """Load ghost animation images"""
@@ -82,7 +297,7 @@ class Ghost(Sprite):
         if self.type == "pinky":
             self.movement_speed = 1
         if self.type == "blinky":
-            self.movement_speed = 1
+            self.movement_speed = 1.5
         if self.type == "inky":
             self.movement_speed = 1
         if self.type == "clyde":

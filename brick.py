@@ -28,6 +28,9 @@ class Brick(Sprite):
         self.rect.x, self.rect.y = pos
         self.x, self.y = pos
 
+    def __str__(self):
+        return "Brick x: {}, y: {}, type: {}".format(self.rect.x, self.rect.y, self.type)
+
     def blitme(self):
         """Draw the brick at its location"""
         self.screen.blit(self.image, self.rect)

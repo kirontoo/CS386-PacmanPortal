@@ -19,7 +19,7 @@ class Settings:
 
         # Pacman settings
         self.pacman_lives = 3
-        self.pacman_speed = 1
+        self.pacman_speed = 2
 
         # Pellet settings
         self.pellet_points = 10

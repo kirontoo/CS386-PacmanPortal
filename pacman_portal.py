@@ -264,12 +264,10 @@ class PacmanPortal:
 
         # Create portals on key presses for 'z' and 'x'
         elif event.key == pygame.K_z:
-            print("Portal 1")
             self.pacman.create_portal(self.maze, 1)
             self.mixer.play_sound(self.mixer.portal_appears, 0)
 
         elif event.key == pygame.K_x:
-            print("Portal 2")
             self.pacman.create_portal(self.maze, 2)
             self.mixer.play_sound(self.mixer.portal_appears, 0)
 
@@ -331,17 +329,17 @@ class PacmanPortal:
 
             # When the high score button is clicked on
             if not self.stats.game_active and btn.msg == "Highscores":
-                print(btn)
                 self.stats.hs_active = True
 
             if not self.stats.game_active and btn.msg == "Back":
-                print(btn)
                 self.stats.hs_active = False
 
     def update_objects(self):
         """Update all game objects"""
         self.pacman.update()
+
         for ghost in self.ghosts:
+            ghost.find_path(self.pacman, self.maze.bricks)
             ghost.update()
 
     def update_screen(self):
